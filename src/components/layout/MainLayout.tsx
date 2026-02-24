@@ -1,5 +1,5 @@
 import { NavLink, Outlet } from 'react-router-dom'
-import { Speedometer2, People, BoxArrowRight } from 'react-bootstrap-icons'
+import { Speedometer2, People } from 'react-bootstrap-icons'
 import './MainLayout.css'
 
 export function MainLayout() {
@@ -23,10 +23,7 @@ export function MainLayout() {
                 </nav>
 
                 <div className="sidebar-footer border-top border-secondary border-opacity-25 pt-3">
-                    <div className="nav-item text-muted small" style={{cursor: 'pointer'}}>
-                        <BoxArrowRight size={20} />
-                        <span>Sair do Sistema</span>
-                    </div>
+                    Equipe: <strong>Elksandro e Anna Gabriela</strong>
                 </div>
             </aside>
 
