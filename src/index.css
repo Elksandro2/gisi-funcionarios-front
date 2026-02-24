@@ -1,0 +1,32 @@
+:root {
+    --primary-color: #062553;
+    --secondary-color: #0859a0;
+}
+
+* {
+    font-family: 'Roboto', sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  background-color: #f8f9fa;
+}
+
+.container-fluid {
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+}
+
+.animate-fade-in {
+    animation: fadeIn 0.5s ease-out forwards;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}

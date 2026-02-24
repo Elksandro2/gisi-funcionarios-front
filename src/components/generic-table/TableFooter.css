@@ -1,0 +1,5 @@
+.table-footer-element {
+    span:nth-child(1) {
+        border: 2px solid white;
+    }
+}

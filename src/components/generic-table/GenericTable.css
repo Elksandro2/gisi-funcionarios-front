@@ -1,0 +1,268 @@
+.generic-table-custom-filter-row {
+    button {
+        border: 1px solid white;
+    }
+}
+
+.table-responsive .form-check-input {
+    cursor: pointer;
+}
+
+.form-check-input:indeterminate {
+    background-color: #0d6efd;
+    border-color: #0d6efd;
+}
+
+.bulk-actions-container {
+    background-color: #f8f9fa;
+    border-radius: 0.25rem;
+    padding: 0.75rem;
+    margin-bottom: 1rem;
+    border: 1px solid #dee2e6;
+}
+
+.total-value-cell {
+    white-space: nowrap;
+}
+
+.total-label-cell {
+    white-space: nowrap;
+}
+
+.table-responsive {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.table-responsive .table {
+    table-layout: auto;
+    width: 100%;
+}
+
+/* Para que o texto quebre nas células de valores totais */
+.total-value-cell {
+    white-space: normal;
+    overflow: hidden;
+    word-wrap: break-word;
+    padding: 0.75rem;
+}
+
+/* Ajuste o label das células de valor total */
+.total-label-cell {
+    text-align: left;
+    white-space: normal;
+    overflow: hidden;
+    word-wrap: break-word;
+    text-overflow: ellipsis;
+    padding: 0.75rem;
+}
+
+/* Para garantir que as células do total fiquem alinhadas corretamente */
+.table-footer .total-value-cell,
+.table-footer .total-label-cell {
+    display: inline-block;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: normal;
+    word-wrap: break-word;
+}
+
+/* Para o footer da tabela, você pode ajustar a largura das células se necessário */
+tfoot tr {
+    max-width: 100%;
+}
+
+tfoot {
+    font-weight: bold;
+}
+
+/* Garantir o alinhamento correto para as células do footer */
+tfoot td {
+    text-align: right;
+    padding: 0.75rem;
+}
+
+/* Estilo para a coluna de seleção */
+.selection-column {
+    width: 40px; /* Largura reduzida */
+    min-width: 40px;
+    max-width: 40px;
+    text-align: center;
+    padding: 0.25rem !important; /* Padding reduzido */
+}
+
+/* Ajuste do checkbox */
+.selection-column .form-check-input {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+    transform: scale(0.9);
+    margin-bottom: 10px;
+    margin-right: 5px;
+}
+
+/* Ajuste para o header da coluna de seleção */
+.selection-column-header {
+    width: 40px;
+    min-width: 40px;
+    max-width: 40px;
+    text-align: center;
+    padding: 0.5rem 0.25rem !important;
+}
+
+@media (max-width: 1599px) {
+    .table-responsive .table th,
+    .table-responsive .table td {
+        padding: 1rem;
+    }
+}
+
+@media (max-width: 767px) {
+    .btn-sm {
+        padding: 0.25rem 0.5rem;
+        font-size: 0.8rem;
+    }
+
+    .card-body {
+        padding: 0.75rem !important;
+    }
+
+    .generic-table-status-button-container {
+        div button {
+            padding: 0.4em 0.5em !important;
+            font-size: 0.8em;
+        }
+    }
+
+    .generic-table-bulk-actions-container {
+        width: 100%;
+        padding: 1em 0.2em;
+    }
+
+    .generic-table-bulk-actions-container {
+        div {
+            width: 15%;
+        }
+    }
+
+    .generic-table-bulk-actions-container {
+        div p {
+            font-size: 0.8em;
+        }
+    }
+
+    /* Esconder a coluna de seleção no mobile */
+    .selection-column {
+        display: none;
+    }
+}
+
+@media (min-width: 768px) {
+    /* Mostrar a coluna de seleção apenas no desktop */
+    .selection-column {
+        display: table-cell;
+    }
+}
+
+.filter-dropdown-toggle {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.filter-dropdown-menu {
+    min-width: 500px !important;
+    max-width: 600px !important;
+    overflow-y: auto;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+    border: 1px solid #e1e3e5;
+    border-radius: 8px;
+    padding: 1.25rem !important;
+}
+
+.filter-dropdown-header {
+    font-size: 1rem !important;
+    color: #202223;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid #e1e3e5;
+    margin-bottom: 1rem;
+}
+
+.filter-dropdown-label {
+    font-size: 1rem !important;
+    font-weight: 500;
+    color: #6d7175;
+    margin-bottom: 0.5rem;
+}
+
+.filter-dropdown-fields {
+    max-height: 25vh;
+    overflow-y: auto;
+    padding-right: 0.25rem;
+}
+
+.filter-dropdown-fields .form-control,
+.filter-dropdown-fields .form-select {
+    font-size: 1rem !important;
+    padding: 0.5rem 0.75rem !important;
+}
+
+.filter-dropdown-actions {
+    margin-top: 1rem;
+    padding-top: 1rem;
+}
+
+.filter-dropdown-actions .btn {
+    padding: 0.5rem 1.5rem !important;
+    font-size: 1rem !important;
+}
+
+.filter-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 20px;
+    height: 20px;
+    padding: 0 6px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #fff;
+    background-color: #d82c0d;
+    border-radius: 10px;
+}
+
+@media (max-width: 992px) {
+    .filter-dropdown-menu {
+        min-width: 420px !important;
+        max-width: 520px !important;
+    }
+}
+
+@media (max-width: 768px) {
+    .filter-dropdown-header {
+        font-size: 1rem !important;
+    }
+
+    .filter-dropdown-label {
+        font-size: 1rem !important;
+    }
+
+    .filter-dropdown-fields .form-control,
+    .filter-dropdown-fields .form-select {
+        font-size: 1rem !important;
+    }
+
+    .filter-dropdown-actions .btn {
+        padding: 0.45rem 1.25rem !important;
+        font-size: 1rem !important;
+    }
+}
+
+@media (max-width: 576px) {
+    .filter-dropdown-menu {
+        min-width: 420px !important;
+    }
+}

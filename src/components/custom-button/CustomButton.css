@@ -1,0 +1,183 @@
+/* CustomButton.css */
+.btn-custom {
+    border: none;
+    border-radius: 12px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    display: inline-block;
+    text-align: center;
+    text-decoration: none;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Tamanhos */
+.btn-custom--size-sm {
+    padding: 8px 16px;
+    font-size: 14px;
+}
+
+.btn-custom--size-md {
+    padding: 14px 24px;
+    font-size: 16px;
+}
+
+.btn-custom--size-lg {
+    padding: 18px 32px;
+    font-size: 18px;
+}
+
+/* Variante Primary */
+.btn-custom--primary {
+    background: var(--primary-color) !important;
+    color: white;
+    box-shadow: 0 4px 15px rgba(248, 139, 187, 0.3);
+}
+
+.btn-custom--primary:hover:not(.btn-custom--disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(248, 139, 187, 0.4);
+}
+
+.btn-custom--primary:active:not(.btn-custom--disabled) {
+    transform: translateY(0);
+}
+
+/* Variante Secondary */
+.btn-custom--secondary {
+    background: linear-gradient(
+        135deg,
+        var(--secondary-color) 0%,
+        var(--primary-color) 100%
+    );
+    color: white;
+    box-shadow: 0 4px 15px rgba(177, 102, 120, 0.3);
+}
+
+.btn-custom--secondary:hover:not(.btn-custom--disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(177, 102, 120, 0.4);
+}
+
+.btn-custom--secondary:active:not(.btn-custom--disabled) {
+    transform: translateY(0);
+}
+
+/* Variante Outline Primary */
+.btn-custom--outline-primary {
+    background: transparent;
+    border: 2px solid var(--primary-color);
+    color: var(--primary-color);
+}
+
+.btn-custom--outline-primary:hover:not(.btn-custom--disabled) {
+    background: var(--primary-color);
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(248, 139, 187, 0.3);
+}
+
+.btn-custom--outline-primary:active:not(.btn-custom--disabled) {
+    transform: translateY(0);
+}
+
+/* Variante Outline Secondary */
+.btn-custom--outline-secondary {
+    background: transparent;
+    border: 2px solid var(--secondary-color);
+    color: var(--secondary-color);
+}
+
+.btn-custom--outline-secondary:hover:not(.btn-custom--disabled) {
+    background: var(--secondary-color);
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(177, 102, 120, 0.3);
+}
+
+.btn-custom--outline-secondary:active:not(.btn-custom--disabled) {
+    transform: translateY(0);
+}
+
+/* Estado Disabled (comum a todas as variantes) */
+.btn-custom--disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none !important;
+    box-shadow: none !important;
+}
+
+/* Variante Only Text Primary */
+.btn-custom--only-text-primary {
+    background: transparent;
+    color: var(--primary-color);
+    box-shadow: none;
+    padding: 8px 16px;
+}
+
+.btn-custom--only-text-primary:hover:not(.btn-custom--disabled) {
+    background: rgba(248, 139, 187, 0.1);
+    transform: translateY(-1px);
+    box-shadow: none;
+}
+
+.btn-custom--only-text-primary:active:not(.btn-custom--disabled) {
+    transform: translateY(0);
+    background: rgba(248, 139, 187, 0.15);
+}
+
+/* Variante Only Text Secondary */
+.btn-custom--only-text-secondary {
+    background: transparent;
+    color: var(--secondary-color);
+    box-shadow: none;
+    padding: 8px 16px;
+}
+
+.btn-custom--only-text-secondary:hover:not(.btn-custom--disabled) {
+    background: rgba(177, 102, 120, 0.1);
+    transform: translateY(-1px);
+    box-shadow: none;
+}
+
+.btn-custom--only-text-secondary:active:not(.btn-custom--disabled) {
+    transform: translateY(0);
+    background: rgba(177, 102, 120, 0.15);
+}
+
+/* Responsividade para mobile (ajuste opcional, similar ao seu projeto) */
+@media (max-width: 767px) {
+    .btn-custom--size-sm {
+        padding: 8px 14px;
+        font-size: 13px;
+    }
+
+    .btn-custom--size-md {
+        padding: 12px 20px;
+        font-size: 15px;
+    }
+
+    .btn-custom--size-lg {
+        padding: 16px 24px;
+        font-size: 16px;
+    }
+}
+
+@media (max-width: 400px) {
+    .btn-custom--size-sm {
+        padding: 6px 12px;
+        font-size: 12px;
+    }
+
+    .btn-custom--size-md {
+        padding: 10px 16px;
+        font-size: 14px;
+    }
+
+    .btn-custom--size-lg {
+        padding: 14px 20px;
+        font-size: 15px;
+    }
+}
