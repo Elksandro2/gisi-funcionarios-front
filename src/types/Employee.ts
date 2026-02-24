@@ -43,3 +43,18 @@ export interface EmployeeFilter {
     size?: number
     sort?: string
 }
+
+export interface CountDTO {
+    name: string;
+    value: number;
+}
+
+export interface EmployeeStats {
+    totalEmployees: number;
+    totalSalary: number;
+    averageSalary: number;
+    genderDist: CountDTO[];
+    deptDist: CountDTO[];
+    cityDist: CountDTO[];
+    yearDist: CountDTO[];
+}

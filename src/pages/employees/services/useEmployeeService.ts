@@ -5,6 +5,7 @@ import {
     EmployeeResponse,
     EmployeeFilter,
     EmployeeRequest,
+    EmployeeStats,
 } from '../../../types/Employee'
 import { Page } from '../../../types/Page'
 import {
@@ -42,6 +43,14 @@ export function useEmployeeService() {
             }
             return await employeeService.findAll(params)
         },
+    })
+
+    const { data: statsData, isLoading: isStatsLoading } = useQuery<
+        EmployeeStats,
+        Error
+    >({
+        queryKey: ['employee-stats', filters],
+        queryFn: () => employeeService.findStats(filters),
     })
 
     // Mutation para Criar/Editar
@@ -97,8 +106,10 @@ export function useEmployeeService() {
 
     return {
         employees: employeesData?.content || [],
+        stats: statsData,
         isLoading:
             isEmployeesLoading ||
+            isStatsLoading ||
             saveEmployeeMutation.isPending ||
             deleteEmployeeMutation.isPending,
         alert,

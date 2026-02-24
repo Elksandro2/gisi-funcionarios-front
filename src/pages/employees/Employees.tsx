@@ -13,7 +13,7 @@ import { EmployeeStats } from './components/EmployeeStats'
 
 export function Employees() {
     const {
-        employees, isLoading, alert, setAlert, saveEmployee, deleteEmployee,
+        employees, stats, isLoading, alert, setAlert, saveEmployee, deleteEmployee,
         currentPage, setCurrentPage, pageSize, setPageSize, totalPages,
         sort, setSort, setFilters,
     } = useEmployeeService()
@@ -76,11 +76,11 @@ export function Employees() {
                 </Button>
             </div>
 
-            <EmployeeStats employees={employees} />
+            <EmployeeStats stats={stats} />
 
-            <EmployeeFilters 
-                onSearch={setFilters} 
-                onClear={() => setFilters({})} 
+            <EmployeeFilters
+                onSearch={setFilters}
+                onClear={() => setFilters({})}
             />
 
             <GenericTable<EmployeeResponse, EmployeeFilter>

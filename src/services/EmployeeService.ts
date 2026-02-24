@@ -1,5 +1,10 @@
 import api from './ApiService'
-import { EmployeeResponse, EmployeeRequest, EmployeeFilter } from '../types/Employee'
+import {
+    EmployeeResponse,
+    EmployeeRequest,
+    EmployeeFilter,
+    EmployeeStats,
+} from '../types/Employee'
 import { Page } from '../types/Page'
 
 class EmployeeService {
@@ -13,17 +18,38 @@ class EmployeeService {
     }
 
     async findById(id: number): Promise<EmployeeResponse> {
-        const { data } = await api.get<EmployeeResponse>(`${this.endpoint}/${id}`)
+        const { data } = await api.get<EmployeeResponse>(
+            `${this.endpoint}/${id}`
+        )
+        return data
+    }
+
+    async findStats(filters: EmployeeFilter): Promise<EmployeeStats> {
+        const { data } = await api.get<EmployeeStats>(
+            `${this.endpoint}/stats`,
+            {
+                params: filters,
+            }
+        )
         return data
     }
 
     async create(request: EmployeeRequest): Promise<EmployeeResponse> {
-        const { data } = await api.post<EmployeeResponse>(this.endpoint, request)
+        const { data } = await api.post<EmployeeResponse>(
+            this.endpoint,
+            request
+        )
         return data
     }
 
-    async update(id: number, request: EmployeeRequest): Promise<EmployeeResponse> {
-        const { data } = await api.put<EmployeeResponse>(`${this.endpoint}/${id}`, request)
+    async update(
+        id: number,
+        request: EmployeeRequest
+    ): Promise<EmployeeResponse> {
+        const { data } = await api.put<EmployeeResponse>(
+            `${this.endpoint}/${id}`,
+            request
+        )
         return data
     }
 
