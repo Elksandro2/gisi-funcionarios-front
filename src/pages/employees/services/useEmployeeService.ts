@@ -28,7 +28,6 @@ export function useEmployeeService() {
 
     const employeeService = useMemo(() => new EmployeeService(), [])
 
-    // Query para buscar a lista de funcionários
     const { data: employeesData, isLoading: isEmployeesLoading } = useQuery<
         Page<EmployeeResponse>,
         Error
@@ -53,7 +52,16 @@ export function useEmployeeService() {
         queryFn: () => employeeService.findStats(filters),
     })
 
-    // Mutation para Criar/Editar
+    const { data: globalStats } = useQuery<EmployeeStats, Error>({
+        queryKey: ['global-stats'],
+        queryFn: () => employeeService.findStats({}),
+        staleTime: 1000 * 60 * 10,
+    })
+
+    const allDepartments = useMemo(() => {
+        return globalStats?.deptDist?.map(d => d.name).sort() || []
+    }, [globalStats])
+
     const saveEmployeeMutation = useMutation({
         mutationFn: async ({
             data,
@@ -71,6 +79,8 @@ export function useEmployeeService() {
         },
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['employees'] })
+            queryClient.invalidateQueries({ queryKey: ['employee-stats'] })
+            queryClient.invalidateQueries({ queryKey: ['global-stats'] })
             setAlert({
                 type: 'success',
                 message: 'Funcionário salvo com sucesso!',
@@ -86,11 +96,12 @@ export function useEmployeeService() {
         },
     })
 
-    // Mutation para Deletar
     const deleteEmployeeMutation = useMutation({
         mutationFn: (id: number) => employeeService.delete(id),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['employees'] })
+            queryClient.invalidateQueries({ queryKey: ['employee-stats'] })
+            queryClient.invalidateQueries({ queryKey: ['global-stats'] })
             setAlert({
                 type: 'success',
                 message: 'Funcionário removido com sucesso.',
@@ -107,6 +118,7 @@ export function useEmployeeService() {
     return {
         employees: employeesData?.content || [],
         stats: statsData,
+        allDepartments,
         isLoading:
             isEmployeesLoading ||
             isStatsLoading ||

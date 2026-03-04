@@ -14,7 +14,7 @@ import { EmployeeFilters } from '../employees/components/EmployeeFilters'
 import { formatBrazilianCurrency } from '../employees/utils/format.util'
 
 export function Dashboard() {
-    const { stats, isLoading, setFilters } = useEmployeeService()
+    const { stats, isLoading, setFilters, allDepartments } = useEmployeeService()
 
     const chartData = useMemo(() => {
         if (!stats) return null
@@ -42,7 +42,7 @@ export function Dashboard() {
                 </div>
             </div>
 
-            <EmployeeFilters onSearch={setFilters} onClear={() => setFilters({})} />
+            <EmployeeFilters onSearch={setFilters} onClear={() => setFilters({})} departments={allDepartments} />
 
             <Row className="mb-4 g-3">
                 <Col md={6} lg={3}>

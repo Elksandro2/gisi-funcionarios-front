@@ -5,17 +5,17 @@ import { useState } from 'react'
 interface EmployeeFiltersProps {
     onSearch: (filters: EmployeeFilter) => void
     onClear: () => void
+    departments: string[]
 }
 
-export function EmployeeFilters({ onSearch, onClear }: EmployeeFiltersProps) {
+export function EmployeeFilters({ onSearch, onClear, departments }: EmployeeFiltersProps) {
     const [searchTerms, setSearchTerms] = useState<EmployeeFilter>({
         name: '',
         department: '',
-        role: '',
     })
 
     const handleLocalClear = () => {
-        const empty = { name: '', department: '', role: '' }
+        const empty = { name: '', department: '' }
         setSearchTerms(empty)
         onClear()
     }
@@ -38,23 +38,12 @@ export function EmployeeFilters({ onSearch, onClear }: EmployeeFiltersProps) {
                 <Col md={3}>
                     <Form.Group>
                         <Form.Label className="small fw-bold">Departamento</Form.Label>
-                        <Form.Control
-                            type="text"
-                            placeholder="TI, RH..."
-                            value={searchTerms.department}
-                            onChange={(e) => setSearchTerms({ ...searchTerms, department: e.target.value })}
-                        />
-                    </Form.Group>
-                </Col>
-                <Col md={3}>
-                    <Form.Group>
-                        <Form.Label className="small fw-bold">Cargo</Form.Label>
-                        <Form.Control
-                            type="text"
-                            placeholder="Analista, Diretor..."
-                            value={searchTerms.role}
-                            onChange={(e) => setSearchTerms({ ...searchTerms, role: e.target.value })}
-                        />
+                        <Form.Select value={searchTerms.department} onChange={(e) => setSearchTerms({ ...searchTerms, department: e.target.value })}>
+                            <option value="">Todos os Departamentos</option>
+                            {departments.map((dept, index) => (
+                                <option key={index} value={dept}>{dept}</option>
+                            ))}
+                        </Form.Select>
                     </Form.Group>
                 </Col>
                 <Col md={2}>
