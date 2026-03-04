@@ -10,7 +10,6 @@ import { ConfirmationModal } from './ConfirmationModal'
 import { ColumnManagementModal } from './ColumnManagementModal'
 import { FilterField, PresetFilter } from './AdvancedSearchModal'
 import { TableToolbar } from './TableToolbar'
-import { TableTotalsRows } from './TableTotalsRows'
 import { useGenericTableState } from './useGenericTableState'
 import './GenericTable.css'
 
@@ -89,7 +88,6 @@ const GenericTable = <T extends object, TFilter extends FieldValues>({
     selectable = false,
     onSelectionChange,
     footerElements = [],
-    totalsRows,
 }: TableProps<T, TFilter>) => {
     const {
         selectedItems,
@@ -250,14 +248,6 @@ const GenericTable = <T extends object, TFilter extends FieldValues>({
                                     </tr>
                                 )}
                             </tbody>
-
-                            {totalsRows && (
-                                <TableTotalsRows
-                                    totalsRows={totalsRows}
-                                    displayColumns={displayColumns}
-                                    selectable={selectable}
-                                />
-                            )}
                         </Table>
                     </div>
 
