@@ -89,8 +89,8 @@ export function Dashboard() {
                                     <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f0f0f0" />
                                     <XAxis dataKey="name" />
                                     <YAxis />
-                                    <Tooltip />
-                                    <Area type="monotone" dataKey="value" stroke="#0d6efd" fill="#0d6efd" fillOpacity={0.1} />
+                                    <Tooltip labelFormatter={(label) => `Ano: ${label}`}/>
+                                    <Area name="Admissões" type="monotone" dataKey="value" stroke="#0d6efd" fill="#0d6efd" fillOpacity={0.1} />
                                 </AreaChart>
                             </div>
                         </Card>
@@ -105,7 +105,7 @@ export function Dashboard() {
                                     <XAxis dataKey="name" />
                                     <YAxis hide />
                                     <Tooltip />
-                                    <Bar dataKey="value" fill="#0d6efd" radius={[4, 4, 0, 0]} />
+                                    <Bar name="Funcionários" dataKey="value" fill="#0d6efd" radius={[4, 4, 0, 0]} />
                                 </BarChart>
                             </div>
                         </Card>
@@ -127,7 +127,7 @@ export function Dashboard() {
                                             <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                                         ))}
                                     </Pie>
-                                    <Tooltip />
+                                    <Tooltip formatter={(value) => [value, 'Quantidade']} />
                                     <Legend />
                                 </PieChart>
                             </div>
