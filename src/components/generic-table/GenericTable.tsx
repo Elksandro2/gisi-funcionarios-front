@@ -5,7 +5,6 @@ import 'bootstrap-icons/font/bootstrap-icons.css'
 import { DndProvider } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
 import { DraggableColumn } from './DraggableColumn'
-import { MobileTableView } from './MobileTableView'
 import { TableFooter } from './TableFooter'
 import { ConfirmationModal } from './ConfirmationModal'
 import { ColumnManagementModal } from './ColumnManagementModal'
@@ -13,7 +12,6 @@ import { FilterField, PresetFilter } from './AdvancedSearchModal'
 import { BulkActionsBar } from './BulkActionsBar'
 import { TableToolbar } from './TableToolbar'
 import { TableTotalsRows } from './TableTotalsRows'
-import { MobileTotalsCards } from './MobileTotalsCards'
 import { useGenericTableState } from './useGenericTableState'
 import { CanIProps } from '../auth/CanI'
 import './GenericTable.css'
@@ -100,7 +98,6 @@ const GenericTable = <T extends object, TFilter extends FieldValues>({
     const {
         selectedItems,
         displayColumns,
-        hasActionsColumn,
         showColumnModal,
         showConfirmModal,
         confirmMessage,
@@ -140,13 +137,6 @@ const GenericTable = <T extends object, TFilter extends FieldValues>({
         if (pageNumber < 1 || pageNumber > totalPages) return
         onPageChange(pageNumber)
     }
-
-    const handleMobileActionClick = useCallback(
-        async (action: TableAction<T>, item: T) => {
-            handleActionWithConfirmation(action, [item])
-        },
-        [handleActionWithConfirmation]
-    )
 
     const handleBulkActionClick = useCallback(
         (action: TableAction<T>) => {
@@ -210,7 +200,7 @@ const GenericTable = <T extends object, TFilter extends FieldValues>({
                     )}
 
                     <div
-                        className="table-responsive d-none d-md-block"
+                        className="table-responsive"
                         style={{ fontSize: '0.9rem' }}
                     >
                         <Table striped bordered hover>
@@ -289,25 +279,6 @@ const GenericTable = <T extends object, TFilter extends FieldValues>({
                             )}
                         </Table>
                     </div>
-
-                    <MobileTableView
-                        data={data}
-                        columns={displayColumns}
-                        renderRow={originalRenderRow}
-                        selectable={selectable}
-                        selectedItems={selectedItems}
-                        onSelectItem={handleSelectItem}
-                        hasActionsColumn={hasActionsColumn}
-                        tableActions={tableActions}
-                        onActionClick={handleMobileActionClick}
-                    />
-
-                    {totalsRows && (
-                        <MobileTotalsCards
-                            totalsRows={totalsRows}
-                            initialColumns={initialColumns}
-                        />
-                    )}
 
                     <TableFooter
                         currentPage={currentPage}
