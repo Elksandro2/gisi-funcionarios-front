@@ -34,10 +34,10 @@ export function Dashboard() {
     return (
         <Container fluid className="mt-4 pb-5">
             <div className="d-flex justify-content-between align-items-center mb-4">
-                <h2 className="fw-bold text-dark mb-0">BI & Analytics RH</h2>
+                <h2 className="fw-bold text-dark mb-0">Painel de Indicadores</h2>
                 <div className="d-flex align-items-center gap-3">
                     <span className="badge bg-light text-primary border p-2">
-                        <GraphUpArrow className="me-1" /> Visão {stats.totalEmployees === 0 ? 'Vazia' : 'Dinâmica'}
+                        <GraphUpArrow className="me-1" /> Dados em Tempo Real
                     </span>
                 </div>
             </div>
@@ -49,7 +49,7 @@ export function Dashboard() {
                     <Card className="border-0 shadow-sm border-start border-primary border-4 h-100">
                         <Card.Body className="d-flex justify-content-between align-items-center">
                             <div><small className="text-muted fw-bold">EQUIPE FILTRADA</small><h3 className="mb-0 fw-bold">{stats.totalEmployees}</h3></div>
-                            <People size={32} className="text-primary opacity-50" />
+                            <People size={32} className="text-primary" />
                         </Card.Body>
                     </Card>
                 </Col>
@@ -57,7 +57,7 @@ export function Dashboard() {
                     <Card className="border-0 shadow-sm border-start border-success border-4 h-100">
                         <Card.Body className="d-flex justify-content-between align-items-center">
                             <div><small className="text-muted fw-bold">FOLHA MENSAL</small><h4 className="mb-0 fw-bold">{formatBrazilianCurrency(stats.totalSalary)}</h4></div>
-                            <CashStack size={32} className="text-success opacity-50" />
+                            <CashStack size={32} className="text-success" />
                         </Card.Body>
                     </Card>
                 </Col>
@@ -65,7 +65,7 @@ export function Dashboard() {
                     <Card className="border-0 shadow-sm border-start border-info border-4 h-100">
                         <Card.Body className="d-flex justify-content-between align-items-center">
                             <div><small className="text-muted fw-bold">MÉDIA SALARIAL</small><h3 className="mb-0 fw-bold">{formatBrazilianCurrency(stats.averageSalary)}</h3></div>
-                            <GraphUpArrow size={28} className="text-info opacity-50" />
+                            <GraphUpArrow size={28} className="text-info" />
                         </Card.Body>
                     </Card>
                 </Col>
@@ -73,7 +73,7 @@ export function Dashboard() {
                     <Card className="border-0 shadow-sm border-start border-warning border-4 h-100">
                         <Card.Body className="d-flex justify-content-between align-items-center">
                             <div><small className="text-muted fw-bold">CIDADES</small><h3 className="mb-0 fw-bold">{stats.cityDist.length}</h3></div>
-                            <GeoAlt size={32} className="text-warning opacity-50" />
+                            <GeoAlt size={32} className="text-warning" />
                         </Card.Body>
                     </Card>
                 </Col>
