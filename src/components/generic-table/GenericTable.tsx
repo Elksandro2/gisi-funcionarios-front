@@ -12,7 +12,6 @@ import { FilterField, PresetFilter } from './AdvancedSearchModal'
 import { TableToolbar } from './TableToolbar'
 import { TableTotalsRows } from './TableTotalsRows'
 import { useGenericTableState } from './useGenericTableState'
-import { CanIProps } from '../auth/CanI'
 import './GenericTable.css'
 
 export interface TableColumn {
@@ -33,7 +32,6 @@ export interface TableAction<T> {
     requiresConfirmation?: boolean
     confirmationMessage?: string | ((selectedItems: T[]) => string)
     openModalPerItem?: boolean
-    canI?: CanIProps
 }
 
 export type { FilterField }
