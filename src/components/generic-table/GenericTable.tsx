@@ -9,7 +9,6 @@ import { TableFooter } from './TableFooter'
 import { ConfirmationModal } from './ConfirmationModal'
 import { ColumnManagementModal } from './ColumnManagementModal'
 import { FilterField, PresetFilter } from './AdvancedSearchModal'
-import { BulkActionsBar } from './BulkActionsBar'
 import { TableToolbar } from './TableToolbar'
 import { TableTotalsRows } from './TableTotalsRows'
 import { useGenericTableState } from './useGenericTableState'
@@ -90,7 +89,6 @@ const GenericTable = <T extends object, TFilter extends FieldValues>({
     formMethods: externalFormMethods,
     customFiltersRow,
     selectable = false,
-    tableActions,
     onSelectionChange,
     footerElements = [],
     totalsRows,
@@ -114,7 +112,6 @@ const GenericTable = <T extends object, TFilter extends FieldValues>({
         handleSelectAll,
         handleAdvancedSearchSubmit,
         handleClearFilters,
-        handleActionWithConfirmation,
         handleConfirmAction,
     } = useGenericTableState<T, TFilter>({
         initialColumns,
@@ -137,13 +134,6 @@ const GenericTable = <T extends object, TFilter extends FieldValues>({
         if (pageNumber < 1 || pageNumber > totalPages) return
         onPageChange(pageNumber)
     }
-
-    const handleBulkActionClick = useCallback(
-        (action: TableAction<T>) => {
-            handleActionWithConfirmation(action, selectedItems)
-        },
-        [handleActionWithConfirmation, selectedItems]
-    )
 
     const renderRow = useCallback(
         (item: T, columns: TableColumn[]) => {
@@ -183,13 +173,6 @@ const GenericTable = <T extends object, TFilter extends FieldValues>({
                         onColumnManagementClick={() => setShowColumnModal(true)}
                         appliedFiltersCount={appliedFiltersCount}
                     />
-                    {selectable && tableActions && (
-                        <BulkActionsBar
-                            tableActions={tableActions}
-                            selectedItems={selectedItems}
-                            onActionClick={handleBulkActionClick}
-                        />
-                    )}
                 </div>
 
                 <div>
