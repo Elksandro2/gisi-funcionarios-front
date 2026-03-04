@@ -4,7 +4,6 @@ import { UseFormReturn, FieldValues } from 'react-hook-form'
 import 'bootstrap-icons/font/bootstrap-icons.css'
 import { DndProvider } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
-import { DraggableColumn } from './DraggableColumn'
 import { TableFooter } from './TableFooter'
 import { ConfirmationModal } from './ConfirmationModal'
 import { FilterField, PresetFilter } from './AdvancedSearchModal'
@@ -92,7 +91,6 @@ const GenericTable = <T extends object, TFilter extends FieldValues>({
         showConfirmModal,
         confirmMessage,
         setShowConfirmModal,
-        moveColumn,
         handleSelectItem,
         handleSelectAll,
         handleConfirmAction,
@@ -165,7 +163,7 @@ const GenericTable = <T extends object, TFilter extends FieldValues>({
                                                 type="checkbox"
                                                 checked={
                                                     selectedItems.length ===
-                                                        data.length &&
+                                                    data.length &&
                                                     data.length > 0
                                                 }
                                                 onChange={(e) =>
@@ -179,24 +177,39 @@ const GenericTable = <T extends object, TFilter extends FieldValues>({
                                                     if (input) {
                                                         input.indeterminate =
                                                             selectedItems.length >
-                                                                0 &&
+                                                            0 &&
                                                             selectedItems.length <
-                                                                data.length
+                                                            data.length
                                                     }
                                                 }}
                                             />
                                         </th>
                                     )}
-                                    {displayColumns.map((column, index) => (
-                                        <DraggableColumn
+                                    {displayColumns.map((column) => (
+                                        <th
                                             key={column.key}
-                                            column={column}
-                                            index={index}
-                                            moveColumn={moveColumn}
-                                            handleSort={handleSort}
-                                            sortKey={sortKey}
-                                            sortOrder={sortOrder}
-                                        />
+                                            onClick={() => column.sortable && handleSort(column.key)}
+                                            style={{
+                                                cursor: column.sortable ? 'pointer' : 'default',
+                                                whiteSpace: 'nowrap'
+                                            }}
+                                        >
+                                            <div className="d-flex align-items-center">
+                                                {column.label}
+
+                                                {column.sortable && (
+                                                    <span className="ms-2">
+                                                        {sortKey === column.key ? (
+                                                            sortOrder === 'asc' ?
+                                                                <i className="bi bi-sort-down-alt text-primary" /> :
+                                                                <i className="bi bi-sort-up-alt text-primary" />
+                                                        ) : (
+                                                            <i className="bi bi-sort-down text-muted opacity-50" />
+                                                        )}
+                                                    </span>
+                                                )}
+                                            </div>
+                                        </th>
                                     ))}
                                 </tr>
                             </thead>
