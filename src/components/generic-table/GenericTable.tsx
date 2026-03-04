@@ -7,9 +7,7 @@ import { HTML5Backend } from 'react-dnd-html5-backend'
 import { DraggableColumn } from './DraggableColumn'
 import { TableFooter } from './TableFooter'
 import { ConfirmationModal } from './ConfirmationModal'
-import { ColumnManagementModal } from './ColumnManagementModal'
 import { FilterField, PresetFilter } from './AdvancedSearchModal'
-import { TableToolbar } from './TableToolbar'
 import { useGenericTableState } from './useGenericTableState'
 import './GenericTable.css'
 
@@ -82,7 +80,6 @@ const GenericTable = <T extends object, TFilter extends FieldValues>({
     pageSize,
     setPageSize,
     filterFields = [],
-    presetFilters = [],
     formMethods: externalFormMethods,
     customFiltersRow,
     selectable = false,
@@ -92,22 +89,12 @@ const GenericTable = <T extends object, TFilter extends FieldValues>({
     const {
         selectedItems,
         displayColumns,
-        showColumnModal,
         showConfirmModal,
         confirmMessage,
-        formMethods,
-        draggableColumns,
-        appliedFiltersCount,
-        setShowColumnModal,
         setShowConfirmModal,
         moveColumn,
-        handleColumnToggle,
-        handleActivateAllColumns,
-        handleDeactivateAllColumns,
         handleSelectItem,
         handleSelectAll,
-        handleAdvancedSearchSubmit,
-        handleClearFilters,
         handleConfirmAction,
     } = useGenericTableState<T, TFilter>({
         initialColumns,
@@ -158,19 +145,6 @@ const GenericTable = <T extends object, TFilter extends FieldValues>({
     return (
         <DndProvider backend={HTML5Backend}>
             <div>
-                <div className="d-flex justify-content-between align-items-center flex-wrap">
-                    <TableToolbar
-                        hasFilterFields={filterFields.length > 0}
-                        filterFields={filterFields}
-                        presetFilters={presetFilters}
-                        formMethods={formMethods}
-                        onApplyFilters={handleAdvancedSearchSubmit}
-                        onClearFilters={handleClearFilters}
-                        onColumnManagementClick={() => setShowColumnModal(true)}
-                        appliedFiltersCount={appliedFiltersCount}
-                    />
-                </div>
-
                 <div>
                     {customFiltersRow && (
                         <div className="generic-table-status-button-container d-flex align-items-center flex-wrap gap-2">
@@ -260,16 +234,6 @@ const GenericTable = <T extends object, TFilter extends FieldValues>({
                         footerElements={footerElements}
                     />
                 </div>
-
-                <ColumnManagementModal
-                    show={showColumnModal}
-                    onHide={() => setShowColumnModal(false)}
-                    initialColumns={initialColumns}
-                    draggableColumns={draggableColumns}
-                    onColumnToggle={handleColumnToggle}
-                    onActivateAll={handleActivateAllColumns}
-                    onDeactivateAll={handleDeactivateAllColumns}
-                />
 
                 <ConfirmationModal
                     show={showConfirmModal}
