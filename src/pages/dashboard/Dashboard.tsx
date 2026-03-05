@@ -1,8 +1,9 @@
 import { useMemo } from 'react'
 import { Row, Col, Card, Container } from 'react-bootstrap'
 import {
-    BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend,
-    PieChart, Pie, Cell, AreaChart, Area,
+    BarChart, Bar, XAxis, YAxis, Tooltip, Legend,
+    PieChart, Pie, AreaChart, Area,
+    Cell,
 } from 'recharts'
 import {
     People, CashStack, BarChart as BarIcon, GeoAlt, GraphUpArrow,
@@ -48,7 +49,7 @@ export function Dashboard() {
                 <Col md={6} lg={3}>
                     <Card className="border-0 shadow-sm border-start border-primary border-4 h-100">
                         <Card.Body className="d-flex justify-content-between align-items-center">
-                            <div><small className="text-muted fw-bold">EQUIPE FILTRADA</small><h3 className="mb-0 fw-bold">{stats.totalEmployees}</h3></div>
+                            <div><small className="text-muted fw-bold">EQUIPE</small><h3 className="mb-0 fw-bold">{stats.totalEmployees}</h3></div>
                             <People size={32} className="text-primary" />
                         </Card.Body>
                     </Card>
@@ -83,10 +84,9 @@ export function Dashboard() {
                 <Row className="g-4">
                     <Col lg={12}>
                         <Card className="border-0 shadow-sm p-4 text-center">
-                            <h5 className="fw-bold mb-4 text-start">Fluxo de Admissões (Filtro Atual)</h5>
+                            <h5 className="fw-bold mb-4 text-start">Fluxo de Admissões</h5>
                             <div className="d-flex justify-content-center overflow-auto">
                                 <AreaChart width={1000} height={250} data={chartData?.history}>
-                                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f0f0f0" />
                                     <XAxis dataKey="name" />
                                     <YAxis />
                                     <Tooltip labelFormatter={(label) => `Ano: ${label}`}/>
@@ -101,7 +101,6 @@ export function Dashboard() {
                             <h5 className="fw-bold mb-4 text-start"><BarIcon className="me-2 text-primary" />Departamentos</h5>
                             <div className="d-flex justify-content-center overflow-auto">
                                 <BarChart width={500} height={300} data={chartData?.dept}>
-                                    <CartesianGrid strokeDasharray="3 3" vertical={false} />
                                     <XAxis dataKey="name" />
                                     <YAxis hide />
                                     <Tooltip />
