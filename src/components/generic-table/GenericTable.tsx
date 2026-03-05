@@ -1,12 +1,9 @@
 import React, { useCallback } from 'react'
 import { Table, Form } from 'react-bootstrap'
-import { UseFormReturn, FieldValues } from 'react-hook-form'
+// Removi o FieldValues e UseFormReturn daqui pois não são mais usados
 import 'bootstrap-icons/font/bootstrap-icons.css'
-import { DndProvider } from 'react-dnd'
-import { HTML5Backend } from 'react-dnd-html5-backend'
 import { TableFooter } from './TableFooter'
 import { ConfirmationModal } from './ConfirmationModal'
-import { FilterField, PresetFilter } from './AdvancedSearchModal'
 import { useGenericTableState } from './useGenericTableState'
 import './GenericTable.css'
 
@@ -18,27 +15,7 @@ export interface TableColumn {
     fixed?: boolean
 }
 
-export interface TableAction<T> {
-    label?: string
-    description?: string
-    icon?: React.ReactNode
-    variant?: string
-    onClick: (selectedItems: T[]) => void | Promise<void>
-    isDisabled?: (selectedItems: T[]) => boolean
-    requiresConfirmation?: boolean
-    confirmationMessage?: string | ((selectedItems: T[]) => string)
-    openModalPerItem?: boolean
-}
-
-export type { FilterField }
-
-/** várias linhas de totais, cada uma com vários valores em colunas diferentes */
-export type TotalsRow = {
-    label: string
-    items: Array<{ columnKey: string; value: React.ReactNode }>
-}
-
-interface TableProps<T, TFilter extends FieldValues> {
+interface TableProps<T> {
     columns: TableColumn[]
     data: T[]
     onSort?: (key: string, order: string) => void
@@ -48,25 +25,16 @@ interface TableProps<T, TFilter extends FieldValues> {
     currentPage: number
     totalPages: number
     renderRow: (item: T, columns: TableColumn[]) => React.ReactNode
-    onSearch?: (filters: TFilter) => void
     pageSize: number
     setPageSize: (size: number) => void
-    filterFields?: FilterField<TFilter>[]
-    presetFilters?: PresetFilter<TFilter>[]
-    children?: React.ReactNode
-    isAdvancedSearchOpen?: boolean
-    setIsAdvancedSearchOpen?: (open: boolean) => void
-    formMethods?: UseFormReturn<TFilter>
     customFiltersRow?: React.ReactNode
     selectable?: boolean
-    tableActions?: TableAction<T>[]
     onSelectionChange?: (selectedItems: T[]) => void
     footerElements?: React.ReactNode[]
-    totalsRows?: TotalsRow[]
 }
 
-const GenericTable = <T extends object, TFilter extends FieldValues>({
-    columns: initialColumns,
+const GenericTable = <T extends object>({
+    columns,
     data,
     onSort,
     sortKey,
@@ -75,33 +43,27 @@ const GenericTable = <T extends object, TFilter extends FieldValues>({
     currentPage,
     totalPages,
     renderRow: originalRenderRow,
-    onSearch,
     pageSize,
     setPageSize,
-    filterFields = [],
-    formMethods: externalFormMethods,
     customFiltersRow,
     selectable = false,
     onSelectionChange,
     footerElements = [],
-}: TableProps<T, TFilter>) => {
+}: TableProps<T>) => {
+    
     const {
         selectedItems,
-        displayColumns,
         showConfirmModal,
         confirmMessage,
         setShowConfirmModal,
         handleSelectItem,
         handleSelectAll,
         handleConfirmAction,
-    } = useGenericTableState<T, TFilter>({
-        initialColumns,
+    } = useGenericTableState<T>({
+        initialColumns: columns,
         data,
-        filterFields,
-        onSearch,
         onPageChange,
         onSelectionChange,
-        formMethods: externalFormMethods,
     })
 
     const handleSort = (key: string) => {
@@ -141,121 +103,93 @@ const GenericTable = <T extends object, TFilter extends FieldValues>({
     )
 
     return (
-        <DndProvider backend={HTML5Backend}>
-            <div>
-                <div>
-                    {customFiltersRow && (
-                        <div className="generic-table-status-button-container d-flex align-items-center flex-wrap gap-2">
-                            {customFiltersRow}
-                        </div>
-                    )}
-
-                    <div
-                        className="table-responsive"
-                        style={{ fontSize: '0.9rem' }}
-                    >
-                        <Table striped bordered hover>
-                            <thead>
-                                <tr>
-                                    {selectable && (
-                                        <th className="selection-column">
-                                            <Form.Check
-                                                type="checkbox"
-                                                checked={
-                                                    selectedItems.length ===
-                                                    data.length &&
-                                                    data.length > 0
-                                                }
-                                                onChange={(e) =>
-                                                    handleSelectAll(
-                                                        e.target.checked
-                                                    )
-                                                }
-                                                ref={(
-                                                    input: HTMLInputElement | null
-                                                ) => {
-                                                    if (input) {
-                                                        input.indeterminate =
-                                                            selectedItems.length >
-                                                            0 &&
-                                                            selectedItems.length <
-                                                            data.length
-                                                    }
-                                                }}
-                                            />
-                                        </th>
-                                    )}
-                                    {displayColumns.map((column) => (
-                                        <th
-                                            key={column.key}
-                                            onClick={() => column.sortable && handleSort(column.key)}
-                                            style={{
-                                                cursor: column.sortable ? 'pointer' : 'default',
-                                                whiteSpace: 'nowrap'
-                                            }}
-                                        >
-                                            <div className="d-flex align-items-center">
-                                                {column.label}
-
-                                                {column.sortable && (
-                                                    <span className="ms-2">
-                                                        {sortKey === column.key ? (
-                                                            sortOrder === 'asc' ?
-                                                                <i className="bi bi-sort-down-alt text-primary" /> :
-                                                                <i className="bi bi-sort-up-alt text-primary" />
-                                                        ) : (
-                                                            <i className="bi bi-sort-down text-muted opacity-50" />
-                                                        )}
-                                                    </span>
-                                                )}
-                                            </div>
-                                        </th>
-                                    ))}
-                                </tr>
-                            </thead>
-
-                            <tbody>
-                                {data.length > 0 ? (
-                                    data.map((item, idx) => (
-                                        <tr key={idx}>
-                                            {renderRow(item, displayColumns)}
-                                        </tr>
-                                    ))
-                                ) : (
-                                    <tr>
-                                        <td
-                                            colSpan={
-                                                displayColumns.length +
-                                                (selectable ? 1 : 0)
-                                            }
-                                            className="text-center"
-                                        >
-                                            Nenhum dado encontrado
-                                        </td>
-                                    </tr>
-                                )}
-                            </tbody>
-                        </Table>
-                    </div>
-
-                    <TableFooter
-                        currentPage={currentPage}
-                        totalPages={totalPages}
-                        pageSize={pageSize}
-                        setPageSize={setPageSize}
-                        onPageChange={handlePageChange}
-                        footerElements={footerElements}
-                    />
+        <div className="generic-table-container">
+            {customFiltersRow && (
+                <div className="generic-table-status-button-container d-flex align-items-center flex-wrap gap-2 mb-3">
+                    {customFiltersRow}
                 </div>
+            )}
 
-                <ConfirmationModal
-                    show={showConfirmModal}
-                    onHide={() => setShowConfirmModal(false)}
-                    onConfirm={handleConfirmAction}
-                    message={confirmMessage}
-                />
+            <div className="table-responsive" style={{ fontSize: '0.9rem' }}>
+                <Table striped bordered hover className="align-middle">
+                    <thead className="table-light">
+                        <tr>
+                            {selectable && (
+                                <th style={{ width: '40px' }}>
+                                    <Form.Check
+                                        type="checkbox"
+                                        checked={data.length > 0 && selectedItems.length === data.length}
+                                        onChange={(e) => handleSelectAll(e.target.checked)}
+                                        ref={(input: HTMLInputElement | null) => {
+                                            if (input) {
+                                                input.indeterminate = selectedItems.length > 0 && selectedItems.length < data.length
+                                            }
+                                        }}
+                                    />
+                                </th>
+                            )}
+                            {columns.map((column) => (
+                                <th
+                                    key={column.key}
+                                    onClick={() => column.sortable && handleSort(column.key)}
+                                    style={{
+                                        cursor: column.sortable ? 'pointer' : 'default',
+                                        whiteSpace: 'nowrap'
+                                    }}
+                                >
+                                    <div className="d-flex align-items-center">
+                                        {column.label}
+                                        {column.sortable && (
+                                            <span className="ms-2">
+                                                {sortKey === column.key ? (
+                                                    sortOrder === 'asc' ? 
+                                                        <i className="bi bi-sort-down-alt text-primary" /> : 
+                                                        <i className="bi bi-sort-up-alt text-primary" />
+                                                ) : (
+                                                    <i className="bi bi-sort-down text-muted opacity-50" />
+                                                )}
+                                            </span>
+                                        )}
+                                    </div>
+                                </th>
+                            ))}
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {data.length > 0 ? (
+                            data.map((item, idx) => (
+                                <tr key={idx}>
+                                    {renderRow(item, columns)}
+                                </tr>
+                            ))
+                        ) : (
+                            <tr>
+                                <td colSpan={columns.length + (selectable ? 1 : 0)} className="text-center py-4 text-muted">
+                                    Nenhum dado encontrado
+                                </td>
+                            </tr>
+                        )}
+                    </tbody>
+                </Table>
             </div>
-        </DndProvider>
+
+            <TableFooter
+                currentPage={currentPage}
+                totalPages={totalPages}
+                pageSize={pageSize}
+                setPageSize={setPageSize}
+                onPageChange={handlePageChange}
+                footerElements={footerElements}
+            />
+
+            <ConfirmationModal
+                show={showConfirmModal}
+                onHide={() => setShowConfirmModal(false)}
+                onConfirm={handleConfirmAction}
+                message={confirmMessage}
+            />
+        </div>
     )
 }
 

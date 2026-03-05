@@ -5,7 +5,7 @@ import { Loading } from '../../components/loading/Loading'
 import { AlertBox } from '../../components/alert-box/AlertBox'
 import { useEmployeeService } from './services/useEmployeeService'
 import { useEmployeeModel } from './models/employee.model'
-import { EmployeeResponse, EmployeeFilter } from '../../types/Employee'
+import { EmployeeResponse } from '../../types/Employee'
 import { EmployeeForm } from './components/EmployeeForm'
 import { EmployeeFilters } from './components/EmployeeFilters'
 import { formatBrazilianCurrency } from './utils/format.util'
@@ -25,12 +25,12 @@ export function Employees() {
     } = useEmployeeModel({ saveEmployee, deleteEmployee })
 
     const columns: TableColumn[] = [
-        { label: 'Nome', key: 'name', sortable: true, isDefault: true },
-        { label: 'Cargo', key: 'role', sortable: true, isDefault: true },
-        { label: 'Departamento', key: 'department', sortable: true, isDefault: true },
-        { label: 'Salário', key: 'salary', sortable: true, isDefault: true },
-        { label: 'Admissão', key: 'admissionDate', sortable: true, isDefault: true },
-        { label: 'Ações', key: 'actions', sortable: false, isDefault: true, fixed: true },
+        { label: 'Nome', key: 'name', sortable: true },
+        { label: 'Cargo', key: 'role', sortable: true },
+        { label: 'Departamento', key: 'department', sortable: true },
+        { label: 'Salário', key: 'salary', sortable: true },
+        { label: 'Admissão', key: 'admissionDate', sortable: true },
+        { label: 'Ações', key: 'actions', sortable: false },
     ]
 
     const renderRow = (employee: EmployeeResponse, columns: TableColumn[]) => (
@@ -58,7 +58,7 @@ export function Employees() {
     )
 
     return (
-        <div className="container-fluid mt-4">
+        <div className="container-fluid mt-4 pb-5">
             {isLoading && <Loading />}
 
             {alert && (
@@ -69,10 +69,10 @@ export function Employees() {
                 />
             )}
 
-            <div className="d-flex justify-content-between align-items-center mb-3">
-                <h2 className="fw-bold text-dark">Gestão de Funcionários</h2>
-                <Button variant="success" onClick={() => setIsModalOpen(true)}>
-                    Cadastrar Funcionário
+            <div className="d-flex justify-content-between align-items-center mb-4">
+                <h2 className="fw-bold text-dark mb-0">Gestão de Funcionários</h2>
+                <Button variant="success" className="shadow-sm" onClick={() => setIsModalOpen(true)}>
+                    <i className="bi bi-plus-lg me-2"></i>Novo Funcionário
                 </Button>
             </div>
 
@@ -84,7 +84,7 @@ export function Employees() {
                 departments={allDepartments}
             />
 
-            <GenericTable<EmployeeResponse, EmployeeFilter>
+            <GenericTable<EmployeeResponse>
                 columns={columns}
                 data={employees}
                 onSort={(key, order) => setSort(`${key},${order}`)}
@@ -99,17 +99,21 @@ export function Employees() {
             />
 
             <Modal show={showDeleteConfirm} onHide={cancelDelete} centered>
-                <Modal.Header closeButton><Modal.Title>Confirmar Exclusão</Modal.Title></Modal.Header>
-                <Modal.Body>Tem certeza que deseja excluir o funcionário? Esta ação não pode ser desfeita.</Modal.Body>
-                <Modal.Footer>
-                    <Button variant="secondary" onClick={cancelDelete}>Cancelar</Button>
-                    <Button variant="danger" onClick={confirmDelete}>Excluir</Button>
+                <Modal.Header closeButton>
+                    <Modal.Title className="fw-bold">Confirmar Exclusão</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    Tem certeza que deseja excluir este funcionário? <strong>Esta ação não pode ser desfeita.</strong>
+                </Modal.Body>
+                <Modal.Footer className="border-0">
+                    <Button variant="light" onClick={cancelDelete}>Cancelar</Button>
+                    <Button variant="danger" onClick={confirmDelete}>Excluir Agora</Button>
                 </Modal.Footer>
             </Modal>
 
             <Modal show={isModalOpen} onHide={resetModal} size="lg">
                 <Modal.Header closeButton>
-                    <Modal.Title>{isEditing ? 'Editar Funcionário' : 'Cadastrar Funcionário'}</Modal.Title>
+                    <Modal.Title className="fw-bold">{isEditing ? 'Editar Funcionário' : 'Novo Cadastro'}</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <EmployeeForm
