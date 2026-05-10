@@ -110,8 +110,8 @@ const GenericTable = <T extends object>({
                 </div>
             )}
 
-            <div className="table-responsive" style={{ fontSize: '0.9rem' }}>
-                <Table striped bordered hover className="align-middle">
+            <div className="table-responsive generic-table-scroll">
+                <Table striped bordered hover size="sm" className="align-middle generic-table">
                     <thead className="table-light">
                         <tr>
                             {selectable && (

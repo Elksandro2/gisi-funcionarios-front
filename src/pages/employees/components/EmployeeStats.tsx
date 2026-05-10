@@ -1,21 +1,21 @@
 import { Row, Col, Card } from 'react-bootstrap'
 import { People, CashStack, GraphUpArrow } from 'react-bootstrap-icons'
 import { formatBrazilianCurrency } from '../utils/format.util'
-import type { EmployeeStats as EmployeeStatsData } from '../../../types/Employee';
+import type { EmployeeStats as EmployeeStatsData } from '../../../types/Employee'
 
 interface EmployeeStatsProps {
     stats?: EmployeeStatsData
 }
 
 export function EmployeeStats({ stats }: EmployeeStatsProps) {
-    if (!stats) return null;
+    if (!stats) return null
 
     return (
         <Row className="mb-4 g-3">
-            <Col md={4}>
+            <Col xs={12} md={4}>
                 <Card className="border-0 shadow-sm bg-primary text-white">
-                    <Card.Body className="d-flex align-items-center">
-                        <div className="rounded-circle bg-white bg-opacity-25 p-3 me-3">
+                    <Card.Body className="d-flex flex-column flex-sm-row align-items-center text-center text-sm-start">
+                        <div className="rounded-circle bg-white bg-opacity-25 p-3 mb-3 mb-sm-0 me-sm-3">
                             <People size={24} />
                         </div>
                         <div>
@@ -26,10 +26,10 @@ export function EmployeeStats({ stats }: EmployeeStatsProps) {
                 </Card>
             </Col>
 
-            <Col md={4}>
+            <Col xs={12} md={4}>
                 <Card className="border-0 shadow-sm bg-success text-white">
-                    <Card.Body className="d-flex align-items-center">
-                        <div className="rounded-circle bg-white bg-opacity-25 p-3 me-3">
+                    <Card.Body className="d-flex flex-column flex-sm-row align-items-center text-center text-sm-start">
+                        <div className="rounded-circle bg-white bg-opacity-25 p-3 mb-3 mb-sm-0 me-sm-3">
                             <CashStack size={24} />
                         </div>
                         <div>
@@ -40,10 +40,10 @@ export function EmployeeStats({ stats }: EmployeeStatsProps) {
                 </Card>
             </Col>
 
-            <Col md={4}>
+            <Col xs={12} md={4}>
                 <Card className="border-0 shadow-sm bg-info text-white">
-                    <Card.Body className="d-flex align-items-center">
-                        <div className="rounded-circle bg-white bg-opacity-25 p-3 me-3">
+                    <Card.Body className="d-flex flex-column flex-sm-row align-items-center text-center text-sm-start">
+                        <div className="rounded-circle bg-white bg-opacity-25 p-3 mb-3 mb-sm-0 me-sm-3">
                             <GraphUpArrow size={20} />
                         </div>
                         <div>

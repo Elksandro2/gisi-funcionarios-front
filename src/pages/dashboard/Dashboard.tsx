@@ -4,6 +4,7 @@ import {
     BarChart, Bar, XAxis, YAxis, Tooltip, Legend,
     PieChart, Pie, AreaChart, Area,
     Cell,
+    ResponsiveContainer,
 } from 'recharts'
 import {
     People, CashStack, BarChart as BarIcon, GeoAlt, GraphUpArrow,
@@ -33,10 +34,10 @@ export function Dashboard() {
     if (!stats) return null
 
     return (
-        <Container fluid className="mt-4 pb-5">
-            <div className="d-flex justify-content-between align-items-center mb-4">
+        <Container fluid className="mt-4 pb-5 dashboard-page">
+            <div className="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-2 mb-4">
                 <h2 className="fw-bold text-dark mb-0">Painel de Indicadores</h2>
-                <div className="d-flex align-items-center gap-3">
+                <div className="d-flex align-items-center gap-3 flex-wrap">
                     <span className="badge bg-light text-primary border p-2">
                         <GraphUpArrow className="me-1" /> Dados em Tempo Real
                     </span>
@@ -46,33 +47,33 @@ export function Dashboard() {
             <EmployeeFilters onSearch={setFilters} onClear={() => setFilters({})} departments={allDepartments} />
 
             <Row className="mb-4 g-3">
-                <Col md={6} lg={3}>
+                <Col xs={12} md={6} lg={3}>
                     <Card className="border-0 shadow-sm border-start border-primary border-4 h-100">
-                        <Card.Body className="d-flex justify-content-between align-items-center">
+                        <Card.Body className="d-flex justify-content-between align-items-center gap-3">
                             <div><small className="text-muted fw-bold">EQUIPE</small><h3 className="mb-0 fw-bold">{stats.totalEmployees}</h3></div>
                             <People size={32} className="text-primary" />
                         </Card.Body>
                     </Card>
                 </Col>
-                <Col md={6} lg={3}>
+                <Col xs={12} md={6} lg={3}>
                     <Card className="border-0 shadow-sm border-start border-success border-4 h-100">
-                        <Card.Body className="d-flex justify-content-between align-items-center">
+                        <Card.Body className="d-flex justify-content-between align-items-center gap-3">
                             <div><small className="text-muted fw-bold">FOLHA MENSAL</small><h4 className="mb-0 fw-bold">{formatBrazilianCurrency(stats.totalSalary)}</h4></div>
                             <CashStack size={32} className="text-success" />
                         </Card.Body>
                     </Card>
                 </Col>
-                <Col md={6} lg={3}>
+                <Col xs={12} md={6} lg={3}>
                     <Card className="border-0 shadow-sm border-start border-info border-4 h-100">
-                        <Card.Body className="d-flex justify-content-between align-items-center">
+                        <Card.Body className="d-flex justify-content-between align-items-center gap-3">
                             <div><small className="text-muted fw-bold">MÉDIA SALARIAL</small><h3 className="mb-0 fw-bold">{formatBrazilianCurrency(stats.averageSalary)}</h3></div>
                             <GraphUpArrow size={28} className="text-info" />
                         </Card.Body>
                     </Card>
                 </Col>
-                <Col md={6} lg={3}>
+                <Col xs={12} md={6} lg={3}>
                     <Card className="border-0 shadow-sm border-start border-warning border-4 h-100">
-                        <Card.Body className="d-flex justify-content-between align-items-center">
+                        <Card.Body className="d-flex justify-content-between align-items-center gap-3">
                             <div><small className="text-muted fw-bold">CIDADES</small><h3 className="mb-0 fw-bold">{stats.cityDist.length}</h3></div>
                             <GeoAlt size={32} className="text-warning" />
                         </Card.Body>
@@ -85,13 +86,15 @@ export function Dashboard() {
                     <Col lg={12}>
                         <Card className="border-0 shadow-sm p-4 text-center">
                             <h5 className="fw-bold mb-4 text-start">Fluxo de Admissões</h5>
-                            <div className="d-flex justify-content-center overflow-auto">
-                                <AreaChart width={1000} height={250} data={chartData?.history}>
-                                    <XAxis dataKey="name" />
-                                    <YAxis />
-                                    <Tooltip labelFormatter={(label) => `Ano: ${label}`}/>
-                                    <Area name="Admissões" type="monotone" dataKey="value" stroke="#0d6efd" fill="#0d6efd" fillOpacity={0.1} />
-                                </AreaChart>
+                            <div className="dashboard-chart">
+                                <ResponsiveContainer width="100%" height={280}>
+                                    <AreaChart data={chartData?.history ?? []}>
+                                        <XAxis dataKey="name" />
+                                        <YAxis />
+                                        <Tooltip labelFormatter={(label) => `Ano: ${label}`}/>
+                                        <Area name="Admissões" type="monotone" dataKey="value" stroke="#0d6efd" fill="#0d6efd" fillOpacity={0.1} />
+                                    </AreaChart>
+                                </ResponsiveContainer>
                             </div>
                         </Card>
                     </Col>
@@ -99,13 +102,15 @@ export function Dashboard() {
                     <Col lg={6}>
                         <Card className="border-0 shadow-sm p-4 h-100 text-center">
                             <h5 className="fw-bold mb-4 text-start"><BarIcon className="me-2 text-primary" />Departamentos</h5>
-                            <div className="d-flex justify-content-center overflow-auto">
-                                <BarChart width={500} height={300} data={chartData?.dept}>
-                                    <XAxis dataKey="name" />
-                                    <YAxis hide />
-                                    <Tooltip />
-                                    <Bar name="Funcionários" dataKey="value" fill="#0d6efd" radius={[4, 4, 0, 0]} />
-                                </BarChart>
+                            <div className="dashboard-chart">
+                                <ResponsiveContainer width="100%" height={300}>
+                                    <BarChart data={chartData?.dept ?? []}>
+                                        <XAxis dataKey="name" />
+                                        <YAxis hide />
+                                        <Tooltip />
+                                        <Bar name="Funcionários" dataKey="value" fill="#0d6efd" radius={[4, 4, 0, 0]} />
+                                    </BarChart>
+                                </ResponsiveContainer>
                             </div>
                         </Card>
                     </Col>
@@ -113,22 +118,24 @@ export function Dashboard() {
                     <Col lg={6}>
                         <Card className="border-0 shadow-sm p-4 h-100 text-center">
                             <h5 className="fw-bold mb-4 text-start"><PieChartIcon className="me-2 text-primary" />Gênero</h5>
-                            <div className="d-flex justify-content-center">
-                                <PieChart width={400} height={300}>
-                                    <Pie
-                                        data={chartData?.gender}
-                                        innerRadius={60}
-                                        outerRadius={80}
-                                        dataKey="value"
-                                        nameKey="name"
-                                    >
-                                        {chartData?.gender.map((_, index) => (
-                                            <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                                        ))}
-                                    </Pie>
-                                    <Tooltip formatter={(value) => [value, 'Quantidade']} />
-                                    <Legend />
-                                </PieChart>
+                            <div className="dashboard-chart">
+                                <ResponsiveContainer width="100%" height={300}>
+                                    <PieChart>
+                                        <Pie
+                                            data={chartData?.gender ?? []}
+                                            innerRadius={60}
+                                            outerRadius={90}
+                                            dataKey="value"
+                                            nameKey="name"
+                                        >
+                                            {chartData?.gender.map((_, index) => (
+                                                <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                                            ))}
+                                        </Pie>
+                                        <Tooltip formatter={(value) => [value, 'Quantidade']} />
+                                        <Legend />
+                                    </PieChart>
+                                </ResponsiveContainer>
                             </div>
                         </Card>
                     </Col>

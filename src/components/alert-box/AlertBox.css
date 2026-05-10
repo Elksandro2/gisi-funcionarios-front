@@ -5,7 +5,7 @@
     transform: translateX(-50%);
     z-index: 9999;
     width: 100%;
-    max-width: 400px;
+    max-width: min(400px, calc(100vw - 1rem));
     padding: 0 15px;
 }
 
@@ -106,6 +106,22 @@
 
 .alertbox__progress--warning {
     background-color: rgba(255, 255, 255, 0.5);
+}
+
+@media (max-width: 576px) {
+    .alertbox__container {
+        top: 12px;
+        padding: 0 8px;
+    }
+
+    .alertbox__body {
+        padding: 12px 14px;
+        font-size: 13px;
+    }
+
+    .alertbox__message {
+        margin-right: 24px;
+    }
 }
 
 /* Animação de entrada */

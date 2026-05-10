@@ -34,8 +34,8 @@ export function EmployeeForm({
             <h5 className="mb-3 text-primary border-bottom pb-2">
                 Dados Pessoais
             </h5>
-            <Row className="mb-3">
-                <Form.Group as={Col} md={6}>
+            <Row className="mb-3 g-3">
+                <Form.Group as={Col} xs={12} md={6}>
                     <Form.Label>Nome Completo</Form.Label>
                     <Form.Control
                         type="text"
@@ -48,7 +48,7 @@ export function EmployeeForm({
                     </Form.Control.Feedback>
                 </Form.Group>
 
-                <Form.Group as={Col} md={6}>
+                <Form.Group as={Col} xs={12} md={6}>
                     <Form.Label>E-mail</Form.Label>
                     <Form.Control
                         type="email"
@@ -62,8 +62,8 @@ export function EmployeeForm({
                 </Form.Group>
             </Row>
 
-            <Row className="mb-3">
-                <Form.Group as={Col} md={4}>
+            <Row className="mb-3 g-3">
+                <Form.Group as={Col} xs={12} md={4}>
                     <Form.Label>Gênero</Form.Label>
                     <Form.Select
                         {...register('gender')}
@@ -79,7 +79,7 @@ export function EmployeeForm({
                     </Form.Control.Feedback>
                 </Form.Group>
 
-                <Form.Group as={Col} md={4}>
+                <Form.Group as={Col} xs={12} md={4}>
                     <Form.Label>Cargo</Form.Label>
                     <Form.Control
                         type="text"
@@ -91,7 +91,7 @@ export function EmployeeForm({
                     </Form.Control.Feedback>
                 </Form.Group>
 
-                <Form.Group as={Col} md={4}>
+                <Form.Group as={Col} xs={12} md={4}>
                     <Form.Label>Departamento</Form.Label>
                     <Form.Control
                         type="text"
@@ -104,8 +104,8 @@ export function EmployeeForm({
                 </Form.Group>
             </Row>
 
-            <Row className="mb-4">
-                <Form.Group as={Col} md={6}>
+            <Row className="mb-4 g-3">
+                <Form.Group as={Col} xs={12} md={6}>
                     <Form.Label>Salário</Form.Label>
                     <Controller
                         name="salary"
@@ -131,7 +131,7 @@ export function EmployeeForm({
                     </Form.Control.Feedback>
                 </Form.Group>
 
-                <Form.Group as={Col} md={6}>
+                <Form.Group as={Col} xs={12} md={6}>
                     <Form.Label>Data de Admissão</Form.Label>
                     <Form.Control
                         type="date"
@@ -145,8 +145,8 @@ export function EmployeeForm({
             </Row>
 
             <h5 className="mb-3 text-primary border-bottom pb-2">Endereço</h5>
-            <Row className="mb-3">
-                <Form.Group as={Col} md={3}>
+            <Row className="mb-3 g-3">
+                <Form.Group as={Col} xs={12} md={3}>
                     <Form.Label>CEP</Form.Label>
                     <Form.Control
                         type="text"
@@ -157,7 +157,7 @@ export function EmployeeForm({
                         {errors.address?.zipCode?.message}
                     </Form.Control.Feedback>
                 </Form.Group>
-                <Form.Group as={Col} md={7}>
+                <Form.Group as={Col} xs={12} md={7}>
                     <Form.Label>Rua</Form.Label>
                     <Form.Control
                         type="text"
@@ -165,7 +165,7 @@ export function EmployeeForm({
                         isInvalid={!!errors.address?.street}
                     />
                 </Form.Group>
-                <Form.Group as={Col} md={2}>
+                <Form.Group as={Col} xs={12} md={2}>
                     <Form.Label>Nº</Form.Label>
                     <Form.Control
                         type="text"
@@ -175,8 +175,8 @@ export function EmployeeForm({
                 </Form.Group>
             </Row>
 
-            <Row className="mb-4">
-                <Form.Group as={Col} md={5}>
+            <Row className="mb-4 g-3">
+                <Form.Group as={Col} xs={12} md={5}>
                     <Form.Label>Bairro</Form.Label>
                     <Form.Control
                         type="text"
@@ -184,7 +184,7 @@ export function EmployeeForm({
                         isInvalid={!!errors.address?.neighborhood}
                     />
                 </Form.Group>
-                <Form.Group as={Col} md={5}>
+                <Form.Group as={Col} xs={12} md={5}>
                     <Form.Label>Cidade</Form.Label>
                     <Form.Control
                         type="text"
@@ -192,7 +192,7 @@ export function EmployeeForm({
                         isInvalid={!!errors.address?.city}
                     />
                 </Form.Group>
-                <Form.Group as={Col} md={2}>
+                <Form.Group as={Col} xs={12} md={2}>
                     <Form.Label>UF</Form.Label>
                     <Form.Control
                         type="text"
@@ -203,7 +203,7 @@ export function EmployeeForm({
                 </Form.Group>
             </Row>
 
-            <div className="d-flex justify-content-end gap-2 mt-4 border-top pt-3">
+            <div className="d-grid gap-2 d-sm-flex justify-content-sm-end mt-4 border-top pt-3">
                 <Button
                     variant="link"
                     className="text-decoration-none text-muted"
