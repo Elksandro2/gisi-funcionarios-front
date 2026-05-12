@@ -14,7 +14,7 @@ import {
 import { useEmployeeService } from '../employees/services/useEmployeeService'
 import { Loading } from '../../components/loading/Loading'
 import { EmployeeFilters } from '../employees/components/EmployeeFilters'
-import { formatBrazilianCurrency } from '../employees/utils/format.util'
+import { formatBrazilianCurrencyCompact } from '../employees/utils/format.util'
 import EmployeeService from '../../services/EmployeeService'
 
 export function Dashboard() {
@@ -23,12 +23,12 @@ export function Dashboard() {
 
     const { data: filteredEmployees = [] } = useQuery({
         queryKey: ['dashboard-all-employees', filters],
-        enabled: !!stats && stats.totalEmployees > 0,
+        staleTime: 1000 * 60 * 5,
         queryFn: async () => {
             const response = await employeeService.findAll({
                 ...filters,
                 page: 0,
-                size: stats?.totalEmployees ?? 0,
+                size: 10000,
                 sort: 'name,asc',
             })
 
@@ -94,16 +94,16 @@ export function Dashboard() {
                 <Col xs={12} md={6} lg={3}>
                     <Card className="border-0 shadow-sm border-start border-success border-4 h-100">
                         <Card.Body className="d-flex justify-content-between align-items-center gap-3">
-                            <div><small className="text-muted fw-bold">FOLHA MENSAL</small><h4 className="mb-0 fw-bold">{formatBrazilianCurrency(stats.totalSalary)}</h4></div>
-                            <CashStack size={32} className="text-success" />
+                            <div><small className="text-muted fw-bold">FOLHA MENSAL</small><h3 className="mb-0 fw-bold" style={{whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '100%'}}>{formatBrazilianCurrencyCompact(stats.totalSalary)}</h3></div>
+                            <CashStack size={32} className="text-success" style={{flexShrink: 0}} />
                         </Card.Body>
                     </Card>
                 </Col>
                 <Col xs={12} md={6} lg={3}>
                     <Card className="border-0 shadow-sm border-start border-info border-4 h-100">
                         <Card.Body className="d-flex justify-content-between align-items-center gap-3">
-                            <div><small className="text-muted fw-bold">MÉDIA SALARIAL</small><h3 className="mb-0 fw-bold">{formatBrazilianCurrency(stats.averageSalary)}</h3></div>
-                            <GraphUpArrow size={28} className="text-info" />
+                            <div><small className="text-muted fw-bold">MÉDIA SALARIAL</small><h3 className="mb-0 fw-bold" style={{whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '100%'}}>{formatBrazilianCurrencyCompact(stats.averageSalary)}</h3></div>
+                            <GraphUpArrow size={28} className="text-info" style={{flexShrink: 0}} />
                         </Card.Body>
                     </Card>
                 </Col>
