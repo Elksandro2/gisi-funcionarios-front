@@ -15,7 +15,7 @@ export function Employees() {
     const {
         employees, stats, isLoading, alert, setAlert, saveEmployee, deleteEmployee,
         currentPage, setCurrentPage, pageSize, setPageSize, totalPages,
-        sort, setSort, setFilters, allDepartments,
+        sort, setSort, setFilters, allDepartments, filters,
     } = useEmployeeService()
 
     const {
@@ -94,6 +94,7 @@ export function Employees() {
                 onSearch={setFilters}
                 onClear={() => setFilters({})}
                 departments={allDepartments}
+                currentFilters={filters}
             />
 
             <GenericTable<EmployeeResponse>

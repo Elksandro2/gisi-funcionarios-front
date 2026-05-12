@@ -80,7 +80,7 @@ export function Dashboard() {
                 </div>
             </div>
 
-            <EmployeeFilters onSearch={setFilters} onClear={() => setFilters({})} departments={allDepartments} />
+            <EmployeeFilters onSearch={setFilters} onClear={() => setFilters({})} departments={allDepartments} currentFilters={filters} />
 
             <Row className="mb-4 g-3">
                 <Col xs={12} md={6} lg={3}>
