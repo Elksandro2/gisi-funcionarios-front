@@ -24,6 +24,7 @@ export function Dashboard() {
     const { data: filteredEmployees = [] } = useQuery({
         queryKey: ['dashboard-all-employees', filters],
         staleTime: 1000 * 60 * 5,
+        gcTime: 1000 * 60 * 10,
         queryFn: async () => {
             const response = await employeeService.findAll({
                 ...filters,
