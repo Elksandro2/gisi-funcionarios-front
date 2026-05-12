@@ -133,10 +133,11 @@ export function useEmployeeService() {
                 message: 'Funcionário removido com sucesso.',
             })
         },
-        onError: () => {
+        onError: (error: any) => {
             setAlert({
                 type: 'danger',
-                message: 'Erro ao remover funcionário.',
+                message:
+                    error?.response?.data?.message || error?.message || 'Erro ao remover funcionário.',
             })
         },
     })
@@ -153,7 +154,7 @@ export function useEmployeeService() {
         alert,
         setAlert,
         saveEmployee: saveEmployeeMutation.mutateAsync,
-        deleteEmployee: deleteEmployeeMutation.mutate,
+        deleteEmployee: deleteEmployeeMutation.mutateAsync,
         currentPage,
         setCurrentPage,
         pageSize,
