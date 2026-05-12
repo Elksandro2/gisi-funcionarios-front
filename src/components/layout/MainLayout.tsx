@@ -30,14 +30,15 @@ export function MainLayout() {
                 </Button>
 
                 <div>
-                    <h1 className="mobile-topbar__brand">SGI</h1>
+                    <h1 className="mobile-topbar__brand">SG</h1>
                     <p className="mobile-topbar__subtitle">Gestão de funcionários</p>
                 </div>
             </header>
 
             <aside className="sidebar">
                 <div className="sidebar-header">
-                    <h4 className="fw-bold text-white mb-0">SGI</h4>
+                    <h4 className="fw-bold text-white mb-0">SG</h4>
+                    <small className="sidebar-brand-subtitle">Sistema de Gerenciamento</small>
                 </div>
                 
                 <nav className="sidebar-nav">
@@ -66,7 +67,7 @@ export function MainLayout() {
                 backdrop
             >
                 <Offcanvas.Header closeButton closeVariant="white">
-                    <Offcanvas.Title>SGI</Offcanvas.Title>
+                    <Offcanvas.Title>SG</Offcanvas.Title>
                 </Offcanvas.Header>
                 <Offcanvas.Body>
                     <nav className="sidebar-nav sidebar-nav--mobile">

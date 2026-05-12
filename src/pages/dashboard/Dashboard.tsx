@@ -1,4 +1,5 @@
 import { useMemo } from 'react'
+import { useQuery } from '@tanstack/react-query'
 import { Row, Col, Card, Container } from 'react-bootstrap'
 import {
     BarChart, Bar, XAxis, YAxis, Tooltip, Legend,
@@ -9,24 +10,59 @@ import {
 import {
     People, CashStack, BarChart as BarIcon, GeoAlt, GraphUpArrow,
     PieChart as PieChartIcon,
-} from 'react-bootstrap-icons'
+    Coin} from 'react-bootstrap-icons'
 import { useEmployeeService } from '../employees/services/useEmployeeService'
 import { Loading } from '../../components/loading/Loading'
 import { EmployeeFilters } from '../employees/components/EmployeeFilters'
 import { formatBrazilianCurrency } from '../employees/utils/format.util'
+import EmployeeService from '../../services/EmployeeService'
 
 export function Dashboard() {
-    const { stats, isLoading, setFilters, allDepartments } = useEmployeeService()
+    const { stats, isLoading, setFilters, allDepartments, filters } = useEmployeeService()
+    const employeeService = useMemo(() => new EmployeeService(), [])
+
+    const { data: filteredEmployees = [] } = useQuery({
+        queryKey: ['dashboard-all-employees', filters],
+        enabled: !!stats && stats.totalEmployees > 0,
+        queryFn: async () => {
+            const response = await employeeService.findAll({
+                ...filters,
+                page: 0,
+                size: stats?.totalEmployees ?? 0,
+                sort: 'name,asc',
+            })
+
+            return response.content
+        },
+    })
 
     const chartData = useMemo(() => {
         if (!stats) return null
+
+        const topCities = [...stats.cityDist]
+            .sort((a, b) => Number(b.value) - Number(a.value))
+            .slice(0, 5)
+
+        const salaryBands = [
+            { name: 'Até 2,5k', min: 0, max: 2500, value: 0 },
+            { name: '2,5k - 5k', min: 2500, max: 5000, value: 0 },
+            { name: '5k - 8k', min: 5000, max: 8000, value: 0 },
+            { name: 'Acima de 8k', min: 8000, max: Number.POSITIVE_INFINITY, value: 0 },
+        ].map((band) => ({
+            ...band,
+            value: filteredEmployees.filter(
+                (employee) => employee.salary >= band.min && employee.salary < band.max,
+            ).length,
+        }))
+
         return {
-            gender: stats.genderDist,
+            history: stats.yearDist,
             dept: stats.deptDist,
-            cities: [...stats.cityDist].sort((a, b) => Number(b.value) - Number(a.value)).slice(0, 5),
-            history: stats.yearDist
+            gender: stats.genderDist,
+            cities: topCities,
+            salaryBands,
         }
-    }, [stats])
+    }, [filteredEmployees, stats])
 
     const COLORS = ['#0d6efd', '#6610f2', '#6f42c1', '#d63384', '#fd7e14', '#ffc107']
 
@@ -36,7 +72,7 @@ export function Dashboard() {
     return (
         <Container fluid className="mt-4 pb-5 dashboard-page">
             <div className="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-2 mb-4">
-                <h2 className="fw-bold text-dark mb-0">Painel de Indicadores</h2>
+                <h2 className="fw-bold text-dark mb-0">Painel SG</h2>
                 <div className="d-flex align-items-center gap-3 flex-wrap">
                     <span className="badge bg-light text-primary border p-2">
                         <GraphUpArrow className="me-1" /> Dados em Tempo Real
@@ -91,7 +127,7 @@ export function Dashboard() {
                                     <AreaChart data={chartData?.history ?? []}>
                                         <XAxis dataKey="name" />
                                         <YAxis />
-                                        <Tooltip labelFormatter={(label) => `Ano: ${label}`}/>
+                                        <Tooltip labelFormatter={(label) => `Ano: ${label}`} />
                                         <Area name="Admissões" type="monotone" dataKey="value" stroke="#0d6efd" fill="#0d6efd" fillOpacity={0.1} />
                                     </AreaChart>
                                 </ResponsiveContainer>
@@ -128,13 +164,45 @@ export function Dashboard() {
                                             dataKey="value"
                                             nameKey="name"
                                         >
-                                            {chartData?.gender.map((_, index) => (
+                                            {(chartData?.gender ?? []).map((_, index) => (
                                                 <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                                             ))}
                                         </Pie>
                                         <Tooltip formatter={(value) => [value, 'Quantidade']} />
                                         <Legend />
                                     </PieChart>
+                                </ResponsiveContainer>
+                            </div>
+                        </Card>
+                    </Col>
+
+                    <Col lg={6}>
+                        <Card className="border-0 shadow-sm p-4 h-100 text-center">
+                            <h5 className="fw-bold mb-4 text-start"><GeoAlt className="me-2 text-primary" />Top 5 Cidades</h5>
+                            <div className="dashboard-chart">
+                                <ResponsiveContainer width="100%" height={300}>
+                                    <BarChart data={chartData?.cities ?? []} layout="vertical" margin={{ left: 10, right: 24 }}>
+                                        <XAxis type="number" allowDecimals={false} />
+                                        <YAxis type="category" dataKey="name" width={100} />
+                                        <Tooltip />
+                                        <Bar name="Funcionários" dataKey="value" fill="#0b5ed7" radius={[0, 8, 8, 0]} />
+                                    </BarChart>
+                                </ResponsiveContainer>
+                            </div>
+                        </Card>
+                    </Col>
+
+                    <Col lg={6}>
+                        <Card className="border-0 shadow-sm p-4 h-100 text-center">
+                            <h5 className="fw-bold mb-4 text-start"><Coin className="me-2 text-primary" /> Faixa Salarial</h5>
+                            <div className="dashboard-chart">
+                                <ResponsiveContainer width="100%" height={300}>
+                                    <BarChart data={chartData?.salaryBands ?? []} margin={{ left: 8, right: 12 }}>
+                                        <XAxis dataKey="name" />
+                                        <YAxis allowDecimals={false} />
+                                        <Tooltip />
+                                        <Bar name="Funcionários" dataKey="value" fill="#198754" radius={[8, 8, 0, 0]} />
+                                    </BarChart>
                                 </ResponsiveContainer>
                             </div>
                         </Card>

@@ -43,11 +43,23 @@ export function Employees() {
                     {column.key === 'salary' && formatBrazilianCurrency(employee.salary)}
                     {column.key === 'admissionDate' && new Date(employee.admissionDate).toLocaleDateString('pt-BR')}
                     {column.key === 'actions' && (
-                        <div className="d-flex gap-2 justify-content-center">
-                            <Button variant="outline-primary" size="sm" onClick={() => handleEditEmployee(employee)}>
+                        <div className="d-flex gap-2 justify-content-center flex-nowrap employee-actions">
+                            <Button
+                                variant="outline-primary"
+                                size="sm"
+                                className="employee-action-button"
+                                onClick={() => handleEditEmployee(employee)}
+                                aria-label={`Editar ${employee.name}`}
+                            >
                                 <PencilSquare />
                             </Button>
-                            <Button variant="outline-danger" size="sm" onClick={() => handleDeleteRequest(employee.id)}>
+                            <Button
+                                variant="outline-danger"
+                                size="sm"
+                                className="employee-action-button"
+                                onClick={() => handleDeleteRequest(employee.id)}
+                                aria-label={`Excluir ${employee.name}`}
+                            >
                                 <Trash />
                             </Button>
                         </div>

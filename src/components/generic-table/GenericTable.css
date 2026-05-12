@@ -159,6 +159,27 @@ tfoot td {
         font-size: 0.85rem;
     }
 
+    .employee-actions {
+        gap: 0.4rem !important;
+    }
+
+    .employee-action-button {
+        min-width: 2.5rem;
+        min-height: 2.5rem;
+        padding: 0.4rem !important;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        line-height: 1;
+    }
+
+    .employee-action-button svg {
+        width: 1.05rem;
+        height: 1.05rem;
+        display: block;
+        flex-shrink: 0;
+    }
+
     .generic-table-bulk-actions-container {
         width: 100%;
         padding: 1em 0.2em;
