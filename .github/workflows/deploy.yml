@@ -2,12 +2,15 @@ name: Deploy Front-end
 
 on:
   push:
-    branches: ["main", "master"]
+    branches:
+      - main
+      - master
 
 env:
   REGISTRY: ghcr.io
 
 jobs:
+  # ── 1. Build & Push da Imagem Estática ──────────────────────────────────────
   build-and-push:
     runs-on: ubuntu-latest
     permissions:
@@ -29,12 +32,6 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Extract metadata (tags, labels) for Docker
-        id: meta
-        uses: docker/metadata-action@v5
-        with:
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME_LOWER }}
-
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
         with:
@@ -43,6 +40,7 @@ jobs:
           tags: |
             ${{ env.REGISTRY }}/${{ env.IMAGE_NAME_LOWER }}:latest
 
+  # ── 2. Deploy no Servidor via SSH ───────────────────────────────────────────
   deploy:
     needs: build-and-push
     runs-on: ubuntu-latest
@@ -57,18 +55,15 @@ jobs:
             mkdir -p /app/gisi-front
             cd /app/gisi-front
 
-            # Autentica o servidor no GitHub Packages para baixar a imagem privada
+            # Faz o login no registro privado dentro do servidor
             echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
-            # Definir nome da imagem em minúsculo
-            IMAGE_NAME_LOWER=$(echo ${{ github.repository }} | tr '[:upper:]' '[:lower:]')
-
-            # Cria o docker-compose.prod.yml dinamicamente direto no servidor
-            cat <<EOF > docker-compose.prod.yml
+            # Cria o docker-compose de produção de forma literal e explícita ('EOF' impede bugs do bash)
+            cat << 'EOF' > docker-compose.prod.yml
             services:
               gisi-funcionarios-front:
                 container_name: gisi-funcionarios-front
-                image: ghcr.io/\$IMAGE_NAME_LOWER:latest
+                image: ghcr.io/elksandro2/gisi-funcionarios-front:latest
                 restart: always
                 networks:
                   - gisi-network
@@ -78,9 +73,9 @@ jobs:
                 external: true
             EOF
 
-            # Baixa a imagem e sobe o container
+            # Baixa a nova imagem gerada e reinicia limpando órfãos
             docker compose -f docker-compose.prod.yml pull
             docker compose -f docker-compose.prod.yml up -d --remove-orphans
 
-            # Limpa imagens antigas para economizar espaço
+            # Remove imagens que perderam as tags para não lotar a VPS
             docker image prune -af
