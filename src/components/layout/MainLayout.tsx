@@ -1,5 +1,5 @@
 import { NavLink, Outlet } from 'react-router-dom'
-import { Speedometer2, People } from 'react-bootstrap-icons'
+import { Speedometer2, People, Robot } from 'react-bootstrap-icons'
 import './MainLayout.css'
 
 export function MainLayout() {
@@ -19,6 +19,11 @@ export function MainLayout() {
                     <NavLink to="/employees" className={({isActive}) => isActive ? 'nav-item active' : 'nav-item'}>
                         <People size={20} />
                         <span>Funcionários</span>
+                    </NavLink>
+
+                    <NavLink to="/chat" className={({isActive}) => isActive ? 'nav-item active' : 'nav-item'}>
+                        <Robot size={20} />
+                        <span>Assistente IA</span>
                     </NavLink>
                 </nav>
 
