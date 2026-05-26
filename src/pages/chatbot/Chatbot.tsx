@@ -190,6 +190,23 @@ export const Chatbot: React.FC = () => {
                     )}
                 </div>
 
+                {/* Barra de Sugestões Persistente */}
+                {messages.length > 0 && (
+                    <div className="chat-suggestions-bar d-flex gap-2 px-3 py-2 bg-light border-top overflow-auto">
+                        {suggestions.map((suggestion, idx) => (
+                            <button
+                                key={idx}
+                                type="button"
+                                className="suggestion-pill-btn btn btn-sm text-nowrap rounded-pill"
+                                onClick={() => handleSend(suggestion)}
+                                disabled={isLoading}
+                            >
+                                {suggestion}
+                            </button>
+                        ))}
+                    </div>
+                )}
+
                 {/* Rodapé e Input */}
                 <form onSubmit={handleSubmit} className="chat-footer p-3 bg-white border-top">
                     <div className="input-group chat-input-group shadow-sm">
