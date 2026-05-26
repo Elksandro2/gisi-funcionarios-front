@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useRef, useEffect } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import EmployeeService from '../../../services/EmployeeService'
 import {
@@ -20,6 +20,9 @@ export function useEmployeeService() {
     const [pageSize, setPageSize] = useState<number>(10)
     const [sort, setSort] = useState<string>('name,asc')
     const [filters, setFilters] = useState<EmployeeFilter>({})
+    const [debouncedFilters, setDebouncedFilters] = useState<EmployeeFilter>({})
+
+    const debounceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
     const [alert, setAlert] = useState<{
         message: string
@@ -28,34 +31,57 @@ export function useEmployeeService() {
 
     const employeeService = useMemo(() => new EmployeeService(), [])
 
+    // Debounce filters to reduce unnecessary API calls
+    useEffect(() => {
+        if (debounceTimerRef.current) {
+            clearTimeout(debounceTimerRef.current)
+        }
+
+        debounceTimerRef.current = setTimeout(() => {
+            setDebouncedFilters(filters)
+            setCurrentPage(1) // Reset to first page on filter change
+        }, 500) // 500ms debounce
+
+        return () => {
+            if (debounceTimerRef.current) {
+                clearTimeout(debounceTimerRef.current)
+            }
+        }
+    }, [filters])
+
     const { data: employeesData, isLoading: isEmployeesLoading } = useQuery<
         Page<EmployeeResponse>,
         Error
     >({
-        queryKey: ['employees', currentPage, pageSize, sort, filters],
+        queryKey: ['employees', currentPage, pageSize, sort, debouncedFilters],
         queryFn: async () => {
             const params: EmployeeFilter = {
-                ...filters,
+                ...debouncedFilters,
                 page: currentPage - 1,
                 size: pageSize,
                 sort,
             }
             return await employeeService.findAll(params)
         },
+        staleTime: 1000 * 60 * 5, // 5 minutes
+        gcTime: 1000 * 60 * 10, // 10 minutes
     })
 
     const { data: statsData, isLoading: isStatsLoading } = useQuery<
         EmployeeStats,
         Error
     >({
-        queryKey: ['employee-stats', filters],
-        queryFn: () => employeeService.findStats(filters),
+        queryKey: ['employee-stats', debouncedFilters],
+        queryFn: () => employeeService.findStats(debouncedFilters),
+        staleTime: 1000 * 60 * 5, // 5 minutes
+        gcTime: 1000 * 60 * 10, // 10 minutes
     })
 
     const { data: globalStats } = useQuery<EmployeeStats, Error>({
         queryKey: ['global-stats'],
         queryFn: () => employeeService.findStats({}),
-        staleTime: 1000 * 60 * 10,
+        staleTime: 1000 * 60 * 30, // 30 minutes
+        gcTime: 1000 * 60 * 60, // 1 hour
     })
 
     const allDepartments = useMemo(() => {
@@ -107,10 +133,11 @@ export function useEmployeeService() {
                 message: 'Funcionário removido com sucesso.',
             })
         },
-        onError: () => {
+        onError: (error: any) => {
             setAlert({
                 type: 'danger',
-                message: 'Erro ao remover funcionário.',
+                message:
+                    error?.response?.data?.message || error?.message || 'Erro ao remover funcionário.',
             })
         },
     })
@@ -127,7 +154,7 @@ export function useEmployeeService() {
         alert,
         setAlert,
         saveEmployee: saveEmployeeMutation.mutateAsync,
-        deleteEmployee: deleteEmployeeMutation.mutate,
+        deleteEmployee: deleteEmployeeMutation.mutateAsync,
         currentPage,
         setCurrentPage,
         pageSize,

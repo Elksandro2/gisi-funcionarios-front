@@ -1,0 +1,11 @@
+services:
+  gisi-funcionarios-front:
+    container_name: gisi-funcionarios-front
+    image: ghcr.io/${IMAGE_NAME_LOWER}:latest
+    restart: always
+    networks:
+      - gisi-network
+
+networks:
+  gisi-network:
+    external: true

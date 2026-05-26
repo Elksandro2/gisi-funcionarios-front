@@ -3,3 +3,34 @@
         border: 2px solid white;
     }
 }
+
+.table-footer__summary {
+    min-width: 0;
+    width: 100%;
+}
+
+.table-footer__controls {
+    min-width: 0;
+    width: 100%;
+}
+
+.table-footer__page-size {
+    min-width: 0;
+    width: 100%;
+}
+
+.table-footer__page-size .form-select {
+    width: 96px;
+    flex: 0 0 auto;
+}
+
+.table-footer__pagination {
+    width: 100%;
+}
+
+@media (min-width: 576px) {
+    .table-footer__page-size,
+    .table-footer__pagination {
+        width: auto;
+    }
+}

@@ -15,7 +15,7 @@ export function Employees() {
     const {
         employees, stats, isLoading, alert, setAlert, saveEmployee, deleteEmployee,
         currentPage, setCurrentPage, pageSize, setPageSize, totalPages,
-        sort, setSort, setFilters, allDepartments,
+        sort, setSort, setFilters, allDepartments, filters,
     } = useEmployeeService()
 
     const {
@@ -43,11 +43,23 @@ export function Employees() {
                     {column.key === 'salary' && formatBrazilianCurrency(employee.salary)}
                     {column.key === 'admissionDate' && new Date(employee.admissionDate).toLocaleDateString('pt-BR')}
                     {column.key === 'actions' && (
-                        <div className="d-flex gap-2 justify-content-center">
-                            <Button variant="outline-primary" size="sm" onClick={() => handleEditEmployee(employee)}>
+                        <div className="d-flex gap-2 justify-content-center flex-nowrap employee-actions">
+                            <Button
+                                variant="outline-primary"
+                                size="sm"
+                                className="employee-action-button"
+                                onClick={() => handleEditEmployee(employee)}
+                                aria-label={`Editar ${employee.name}`}
+                            >
                                 <PencilSquare />
                             </Button>
-                            <Button variant="outline-danger" size="sm" onClick={() => handleDeleteRequest(employee.id)}>
+                            <Button
+                                variant="outline-danger"
+                                size="sm"
+                                className="employee-action-button"
+                                onClick={() => handleDeleteRequest(employee.id)}
+                                aria-label={`Excluir ${employee.name}`}
+                            >
                                 <Trash />
                             </Button>
                         </div>
@@ -69,7 +81,7 @@ export function Employees() {
                 />
             )}
 
-            <div className="d-flex justify-content-between align-items-center mb-4">
+            <div className="d-grid gap-3 d-md-flex justify-content-md-between align-items-md-center mb-4">
                 <h2 className="fw-bold text-dark mb-0">Gestão de Funcionários</h2>
                 <Button variant="success" className="shadow-sm" onClick={() => setIsModalOpen(true)}>
                     <i className="bi bi-plus-lg me-2"></i>Novo Funcionário
@@ -82,6 +94,7 @@ export function Employees() {
                 onSearch={setFilters}
                 onClear={() => setFilters({})}
                 departments={allDepartments}
+                currentFilters={filters}
             />
 
             <GenericTable<EmployeeResponse>

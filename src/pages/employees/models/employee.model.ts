@@ -14,7 +14,7 @@ export const useEmployeeModel = ({
         isEditing: boolean
         id?: number
     }) => Promise<EmployeeResponse | void>
-    deleteEmployee: (id: number) => void
+    deleteEmployee: (id: number) => Promise<void>
 }) => {
     const [isModalOpen, setIsModalOpen] = useState(false)
     const [isEditing, setIsEditing] = useState(false)
@@ -70,9 +70,16 @@ export const useEmployeeModel = ({
 
     const confirmDelete = () => {
         if (employeeToDelete !== null) {
-            deleteEmployee(employeeToDelete)
-            setShowDeleteConfirm(false)
-            setEmployeeToDelete(null)
+            ;(async () => {
+                try {
+                    await deleteEmployee(employeeToDelete)
+                } catch (e) {
+                    // onError already sets alert in the hook; swallow here
+                } finally {
+                    setShowDeleteConfirm(false)
+                    setEmployeeToDelete(null)
+                }
+            })()
         }
     }
 

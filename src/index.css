@@ -3,6 +3,10 @@
     --secondary-color: #0859a0;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 * {
     font-family: 'Roboto', sans-serif;
     margin: 0;
@@ -10,16 +14,38 @@
     box-sizing: border-box;
 }
 
+html,
+body,
+#root {
+  min-height: 100%;
+}
+
 body {
   margin: 0;
   padding: 0;
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
   background-color: #f8f9fa;
+  color: #1f2937;
+  overflow-x: hidden;
+}
+
+img,
+svg,
+video,
+canvas {
+  max-width: 100%;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
 }
 
 .container-fluid {
-  padding-left: 1.5rem;
-  padding-right: 1.5rem;
+  padding-left: clamp(0.85rem, 2vw, 1.5rem);
+  padding-right: clamp(0.85rem, 2vw, 1.5rem);
 }
 
 .animate-fade-in {

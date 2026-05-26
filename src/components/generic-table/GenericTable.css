@@ -36,9 +36,17 @@
     box-sizing: border-box;
 }
 
+.generic-table-container {
+    width: 100%;
+}
+
 .table-responsive .table {
     table-layout: auto;
     width: 100%;
+}
+
+.generic-table-scroll {
+    border-radius: 0.75rem;
 }
 
 /* Para que o texto quebre nas células de valores totais */
@@ -121,6 +129,12 @@ tfoot td {
 }
 
 @media (max-width: 767px) {
+    .table-responsive .table th,
+    .table-responsive .table td {
+        padding: 0.65rem 0.7rem;
+        font-size: 0.85rem;
+    }
+
     .btn-sm {
         padding: 0.25rem 0.5rem;
         font-size: 0.8rem;
@@ -131,10 +145,39 @@ tfoot td {
     }
 
     .generic-table-status-button-container {
-        div button {
-            padding: 0.4em 0.5em !important;
-            font-size: 0.8em;
-        }
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .generic-table-status-button-container > * {
+        width: 100%;
+    }
+
+    .generic-table-status-button-container button {
+        width: 100%;
+        padding: 0.55rem 0.75rem !important;
+        font-size: 0.85rem;
+    }
+
+    .employee-actions {
+        gap: 0.4rem !important;
+    }
+
+    .employee-action-button {
+        min-width: 2.5rem;
+        min-height: 2.5rem;
+        padding: 0.4rem !important;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        line-height: 1;
+    }
+
+    .employee-action-button svg {
+        width: 1.05rem;
+        height: 1.05rem;
+        display: block;
+        flex-shrink: 0;
     }
 
     .generic-table-bulk-actions-container {
@@ -174,8 +217,9 @@ tfoot td {
 }
 
 .filter-dropdown-menu {
-    min-width: 500px !important;
-    max-width: 600px !important;
+    width: min(600px, calc(100vw - 2rem)) !important;
+    min-width: 0 !important;
+    max-width: none !important;
     overflow-y: auto;
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
     border: 1px solid #e1e3e5;
@@ -236,8 +280,7 @@ tfoot td {
 
 @media (max-width: 992px) {
     .filter-dropdown-menu {
-        min-width: 420px !important;
-        max-width: 520px !important;
+        width: calc(100vw - 2rem) !important;
     }
 }
 
@@ -263,6 +306,7 @@ tfoot td {
 
 @media (max-width: 576px) {
     .filter-dropdown-menu {
-        min-width: 420px !important;
+        width: calc(100vw - 1rem) !important;
+        padding: 1rem !important;
     }
 }

@@ -46,7 +46,7 @@ const CustomPagination: React.FC<CustomPaginationProps> = ({
 
     return (
         <div className="d-flex align-items-center">
-            <Pagination className="mb-0 light-theme-override rounded-2">
+            <Pagination size="sm" className="mb-0 light-theme-override rounded-2 flex-wrap">
                 <Pagination.First
                     onClick={() => handlePageChange(1)}
                     disabled={currentPage === 1}

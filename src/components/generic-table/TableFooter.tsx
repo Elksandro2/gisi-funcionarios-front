@@ -21,8 +21,8 @@ export const TableFooter = ({
     footerElements = [],
 }: TableFooterProps) => {
     return (
-        <div className="d-flex align-items-center justify-content-between gap-3 mt-3 flex-wrap flex-column flex-md-row mb-3">
-            <div>
+        <div className="table-footer d-flex align-items-start align-items-md-center justify-content-between gap-3 mt-3 flex-column flex-md-row mb-3">
+            <div className="table-footer__summary">
                 {footerElements.length > 0 && (
                     <div className="d-flex align-items-center gap-2 flex-wrap">
                         {footerElements.map((el, i) => (
@@ -34,8 +34,8 @@ export const TableFooter = ({
                 )}
             </div>
 
-            <div className="d-flex justify-content-end gap-3 flex-wrap">
-                <div className="d-flex align-items-center">
+            <div className="table-footer__controls d-flex flex-column flex-sm-row justify-content-end gap-3 flex-wrap">
+                <div className="table-footer__page-size d-flex align-items-center justify-content-between justify-content-sm-start gap-2">
                     <span className="me-2 d-none d-md-inline">
                         Itens por página:
                     </span>
@@ -47,7 +47,7 @@ export const TableFooter = ({
                             onPageChange(1)
                         }}
                         style={{
-                            width: '80px',
+                            width: '96px',
                             height: '32px',
                             padding: '4px',
                             fontSize: '0.875rem',
@@ -61,11 +61,13 @@ export const TableFooter = ({
                     </Form.Select>
                 </div>
 
-                <CustomPagination
-                    currentPage={currentPage}
-                    totalPages={totalPages}
-                    onPageChange={onPageChange}
-                />
+                <div className="table-footer__pagination d-flex justify-content-end">
+                    <CustomPagination
+                        currentPage={currentPage}
+                        totalPages={totalPages}
+                        onPageChange={onPageChange}
+                    />
+                </div>
             </div>
         </div>
     )
