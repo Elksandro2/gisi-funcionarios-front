@@ -1,5 +1,9 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react'
 import { Send, Bot, Sparkles, Trash2, ArrowRight } from 'lucide-react'
+import {
+    BarChart, Bar, XAxis, YAxis, Tooltip as RechartsTooltip, Legend,
+    PieChart, Pie, Cell, ResponsiveContainer
+} from 'recharts'
 import ChatService from '../../services/ChatService'
 import { AlertBox } from '../../components/alert-box/AlertBox'
 import './Chatbot.css'
@@ -22,6 +26,72 @@ export const Chatbot: React.FC = () => {
 
     const chatService = useMemo(() => new ChatService(), [])
     const messagesEndRef = useRef<HTMLDivElement>(null)
+
+    // Renderizador de mensagens que intercepta tags de gráfico <chart>
+    const renderMessageContent = (text: string) => {
+        const chartRegex = /<chart\s+type="(\w+)"\s+title="([^"]+)"[^>]*>([\s\S]*?)<\/chart>/i
+        const match = text.match(chartRegex)
+
+        if (!match) {
+            return <div className="msg-text">{text}</div>
+        }
+
+        const beforeText = text.substring(0, match.index)
+        const afterText = text.substring(match.index! + match[0].length)
+        const type = match[1]
+        const title = match[2]
+        const rawData = match[3]
+
+        let data = []
+        try {
+            data = JSON.parse(rawData.trim())
+        } catch (e) {
+            console.error('Failed to parse chart data:', e)
+            return <div className="msg-text">{text}</div>
+        }
+
+        const COLORS = ['#0d6efd', '#6610f2', '#6f42c1', '#d63384', '#fd7e14', '#ffc107']
+
+        return (
+            <div className="msg-text">
+                {beforeText && <p className="mb-2">{beforeText}</p>}
+                <div className="chat-chart-card bg-white p-3 rounded shadow-sm my-2 border text-center mx-auto" style={{ minWidth: '280px', maxWidth: '100%', height: '240px' }}>
+                    <h6 className="fw-bold mb-2 text-dark text-start" style={{ fontSize: '0.85rem' }}>{title}</h6>
+                    <div style={{ width: '100%', height: '175px' }}>
+                        <ResponsiveContainer width="100%" height="100%">
+                            {type === 'pie' ? (
+                                <PieChart>
+                                    <Pie
+                                        data={data}
+                                        cx="50%"
+                                        cy="45%"
+                                        innerRadius={30}
+                                        outerRadius={50}
+                                        dataKey="value"
+                                        nameKey="name"
+                                    >
+                                        {data.map((_entry: any, index: number) => (
+                                            <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                                        ))}
+                                    </Pie>
+                                    <RechartsTooltip formatter={(val) => [val, 'Quantidade']} />
+                                    <Legend wrapperStyle={{ fontSize: '9px', bottom: -5 }} />
+                                </PieChart>
+                            ) : (
+                                <BarChart data={data} margin={{ top: 5, right: 10, left: -25, bottom: 5 }}>
+                                    <XAxis dataKey="name" style={{ fontSize: '9px' }} />
+                                    <YAxis style={{ fontSize: '9px' }} allowDecimals={false} />
+                                    <RechartsTooltip />
+                                    <Bar dataKey="value" fill="#0d6efd" radius={[4, 4, 0, 0]} />
+                                </BarChart>
+                            )}
+                        </ResponsiveContainer>
+                    </div>
+                </div>
+                {afterText && <p className="mt-2">{afterText}</p>}
+            </div>
+        )
+    }
 
     const suggestions = [
         'Quantos funcionários a empresa possui?',
@@ -164,7 +234,7 @@ export const Chatbot: React.FC = () => {
                                         </div>
                                     )}
                                     <div className="message-bubble shadow-sm">
-                                        <div className="msg-text">{msg.text}</div>
+                                        {renderMessageContent(msg.text)}
                                         <div className="msg-time">
                                             {msg.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                                         </div>
@@ -192,7 +262,7 @@ export const Chatbot: React.FC = () => {
 
                 {/* Barra de Sugestões Persistente */}
                 {messages.length > 0 && (
-                    <div className="chat-suggestions-bar d-flex gap-2 px-3 py-2 bg-light border-top overflow-auto">
+                    <div className="chat-suggestions-bar d-flex flex-wrap gap-2 px-3 py-2 bg-light border-top justify-content-center">
                         {suggestions.map((suggestion, idx) => (
                             <button
                                 key={idx}

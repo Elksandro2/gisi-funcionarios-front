@@ -332,15 +332,12 @@
     }
 }
 
-/* Barra de sugestões horizontal persistente */
+/* Barra de sugestões persistente com quebra automática (wrap) */
 .chat-suggestions-bar {
-    white-space: nowrap;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none; /* Oculta a scrollbar no Firefox */
-}
-
-.chat-suggestions-bar::-webkit-scrollbar {
-    display: none; /* Oculta a scrollbar no Chrome/Safari */
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
 }
 
 .suggestion-pill-btn {
