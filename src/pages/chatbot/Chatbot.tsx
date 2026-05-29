@@ -29,42 +29,22 @@ export const Chatbot: React.FC = () => {
     const chatService = useMemo(() => new ChatService(), [])
     const messagesEndRef = useRef<HTMLDivElement>(null)
 
+    // Cleanup when component unmounts
     useEffect(() => {
-        const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition
-        if (SpeechRecognition) {
-            const recognition = new SpeechRecognition()
-            recognition.continuous = false
-            recognition.lang = 'pt-BR'
-            recognition.interimResults = false
-
-            recognition.onstart = () => {
-                setIsListening(true)
+        return () => {
+            if (recognitionRef.current) {
+                try {
+                    recognitionRef.current.abort();
+                } catch (e) {
+                    // Ignore abort errors
+                }
             }
-
-            recognition.onresult = (event: any) => {
-                const transcript = event.results[0][0].transcript
-                setInput((prev) => prev ? `${prev} ${transcript}` : transcript)
-            }
-
-            recognition.onerror = (event: any) => {
-                console.error('Speech recognition error', event.error)
-                setIsListening(false)
-                setAlert({
-                    message: 'Erro no reconhecimento de voz. Tente novamente.',
-                    type: 'danger'
-                })
-            }
-
-            recognition.onend = () => {
-                setIsListening(false)
-            }
-
-            recognitionRef.current = recognition
-        }
-    }, [])
+        };
+    }, []);
 
     const toggleListening = () => {
-        if (!recognitionRef.current) {
+        const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition
+        if (!SpeechRecognition) {
             setAlert({
                 message: 'Reconhecimento de voz não suportado pelo seu navegador.',
                 type: 'warning'
@@ -73,9 +53,50 @@ export const Chatbot: React.FC = () => {
         }
 
         if (isListening) {
-            recognitionRef.current.stop()
+            if (recognitionRef.current) {
+                recognitionRef.current.stop()
+            }
+            setIsListening(false)
         } else {
-            recognitionRef.current.start()
+            try {
+                const recognition = new SpeechRecognition()
+                recognition.continuous = false
+                recognition.lang = 'pt-BR'
+                recognition.interimResults = false
+
+                recognition.onstart = () => {
+                    setIsListening(true)
+                }
+
+                recognition.onresult = (event: any) => {
+                    const transcript = event.results[0][0].transcript
+                    setInput((prev) => prev ? `${prev} ${transcript}` : transcript)
+                }
+
+                recognition.onerror = (event: any) => {
+                    console.warn('Speech recognition event:', event.error)
+                    setIsListening(false)
+                    
+                    // Ignora erros comuns que não afetam a aplicação criticamente (ex: usuário demorou a falar)
+                    if (event.error !== 'no-speech') {
+                         const errorMsg = event.error === 'network' 
+                            ? 'Erro de rede ou permissão com o serviço de voz. Verifique sua conexão e se o site está usando HTTPS.'
+                            : `Erro no reconhecimento: ${event.error}`
+                         
+                         setAlert({ message: errorMsg, type: 'warning' })
+                    }
+                }
+
+                recognition.onend = () => {
+                    setIsListening(false)
+                }
+
+                recognitionRef.current = recognition
+                recognition.start()
+            } catch (error) {
+                console.error('Falha ao iniciar reconhecimento de voz', error)
+                setIsListening(false)
+            }
         }
     }
 
@@ -334,12 +355,11 @@ export const Chatbot: React.FC = () => {
                     <div className="input-group chat-input-group shadow-sm">
                         <button
                             type="button"
-                            className={`btn ${isListening ? 'btn-danger shadow-inner animate-pulse' : 'btn-light border'} px-3 d-flex align-items-center justify-content-center border-end-0`}
+                            className={`btn chat-mic-btn px-3 d-flex align-items-center justify-content-center ${isListening ? 'listening' : ''}`}
                             onClick={toggleListening}
                             title={isListening ? "Parar de ouvir" : "Falar"}
-                            style={{ borderTopLeftRadius: '0.375rem', borderBottomLeftRadius: '0.375rem' }}
                         >
-                            {isListening ? <Mic size={18} /> : <MicOff size={18} className="text-secondary" />}
+                            {isListening ? <Mic size={18} /> : <MicOff size={18} />}
                         </button>
                         <input
                             type="text"
@@ -347,13 +367,12 @@ export const Chatbot: React.FC = () => {
                             onChange={(e) => setInput(e.target.value)}
                             disabled={isLoading}
                             placeholder="Pergunte-me algo sobre os funcionários..."
-                            className="form-control border-start-0 px-3 py-3 chat-input"
+                            className="form-control px-2 py-3 chat-input shadow-none"
                         />
                         <button 
                             type="submit" 
                             disabled={isLoading || !input.trim()} 
                             className="btn btn-primary px-4 d-flex align-items-center justify-content-center chat-send-btn"
-                            style={{ borderTopRightRadius: '0.375rem', borderBottomRightRadius: '0.375rem' }}
                         >
                             <Send size={18} />
                         </button>
