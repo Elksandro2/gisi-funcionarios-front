@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react'
-import { Send, Bot, Sparkles, Trash2, ArrowRight } from 'lucide-react'
+import { Send, Bot, Sparkles, Trash2, ArrowRight, Mic, MicOff } from 'lucide-react'
 import {
     BarChart, Bar, XAxis, YAxis, Tooltip as RechartsTooltip, Legend,
     PieChart, Pie, Cell, ResponsiveContainer
@@ -19,6 +19,8 @@ export const Chatbot: React.FC = () => {
     const [messages, setMessages] = useState<Message[]>([])
     const [input, setInput] = useState('')
     const [isLoading, setIsLoading] = useState(false)
+    const [isListening, setIsListening] = useState(false)
+    const recognitionRef = useRef<any>(null)
     const [alert, setAlert] = useState<{
         message: string
         type: 'success' | 'danger' | 'warning'
@@ -26,6 +28,56 @@ export const Chatbot: React.FC = () => {
 
     const chatService = useMemo(() => new ChatService(), [])
     const messagesEndRef = useRef<HTMLDivElement>(null)
+
+    useEffect(() => {
+        const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition
+        if (SpeechRecognition) {
+            const recognition = new SpeechRecognition()
+            recognition.continuous = false
+            recognition.lang = 'pt-BR'
+            recognition.interimResults = false
+
+            recognition.onstart = () => {
+                setIsListening(true)
+            }
+
+            recognition.onresult = (event: any) => {
+                const transcript = event.results[0][0].transcript
+                setInput((prev) => prev ? `${prev} ${transcript}` : transcript)
+            }
+
+            recognition.onerror = (event: any) => {
+                console.error('Speech recognition error', event.error)
+                setIsListening(false)
+                setAlert({
+                    message: 'Erro no reconhecimento de voz. Tente novamente.',
+                    type: 'danger'
+                })
+            }
+
+            recognition.onend = () => {
+                setIsListening(false)
+            }
+
+            recognitionRef.current = recognition
+        }
+    }, [])
+
+    const toggleListening = () => {
+        if (!recognitionRef.current) {
+            setAlert({
+                message: 'Reconhecimento de voz não suportado pelo seu navegador.',
+                type: 'warning'
+            })
+            return
+        }
+
+        if (isListening) {
+            recognitionRef.current.stop()
+        } else {
+            recognitionRef.current.start()
+        }
+    }
 
     // Renderizador de mensagens que intercepta tags de gráfico <chart>
     const renderMessageContent = (text: string) => {
@@ -280,18 +332,28 @@ export const Chatbot: React.FC = () => {
                 {/* Rodapé e Input */}
                 <form onSubmit={handleSubmit} className="chat-footer p-3 bg-white border-top">
                     <div className="input-group chat-input-group shadow-sm">
+                        <button
+                            type="button"
+                            className={`btn ${isListening ? 'btn-danger shadow-inner animate-pulse' : 'btn-light border'} px-3 d-flex align-items-center justify-content-center border-end-0`}
+                            onClick={toggleListening}
+                            title={isListening ? "Parar de ouvir" : "Falar"}
+                            style={{ borderTopLeftRadius: '0.375rem', borderBottomLeftRadius: '0.375rem' }}
+                        >
+                            {isListening ? <Mic size={18} /> : <MicOff size={18} className="text-secondary" />}
+                        </button>
                         <input
                             type="text"
                             value={input}
                             onChange={(e) => setInput(e.target.value)}
                             disabled={isLoading}
                             placeholder="Pergunte-me algo sobre os funcionários..."
-                            className="form-control border-0 px-4 py-3 chat-input"
+                            className="form-control border-start-0 px-3 py-3 chat-input"
                         />
                         <button 
                             type="submit" 
                             disabled={isLoading || !input.trim()} 
                             className="btn btn-primary px-4 d-flex align-items-center justify-content-center chat-send-btn"
+                            style={{ borderTopRightRadius: '0.375rem', borderBottomRightRadius: '0.375rem' }}
                         >
                             <Send size={18} />
                         </button>
