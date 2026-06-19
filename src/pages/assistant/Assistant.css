@@ -1,9 +1,9 @@
-.chatbot-container {
+.assistant-container {
     max-width: 900px;
     margin: 0 auto;
 }
 
-.chatbot-card {
+.assistant-card {
     display: flex;
     flex-direction: column;
     height: calc(100vh - 120px);
@@ -350,7 +350,7 @@
 }
 
 @media (max-width: 768px) {
-    .chatbot-card {
+    .assistant-card {
         height: calc(100vh - 100px);
     }
     .message-row {

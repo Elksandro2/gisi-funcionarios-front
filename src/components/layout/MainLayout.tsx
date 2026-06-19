@@ -15,7 +15,7 @@ export function MainLayout() {
     const navigationItems = [
         { to: '/dashboard', label: 'Dashboard', icon: <Speedometer2 size={20} /> },
         { to: '/employees', label: 'Funcionários', icon: <People size={20} /> },
-        { to: '/chat', label: 'Assistente IA', icon: <Robot size={20} /> },
+        { to: '/assistant', label: 'Assistente IA', icon: <Robot size={20} /> },
     ]
 
     return (

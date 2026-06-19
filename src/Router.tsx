@@ -6,7 +6,7 @@ import { Loading } from './components/loading/Loading'
 
 const Dashboard = lazy(() => import('./pages/dashboard/Dashboard').then(mod => ({ default: mod.Dashboard })))
 const Employees = lazy(() => import('./pages/employees/Employees').then(mod => ({ default: mod.Employees })))
-const Chatbot = lazy(() => import('./pages/chatbot/Chatbot').then(mod => ({ default: mod.Chatbot })))
+const Assistant = lazy(() => import('./pages/assistant/Assistant').then(mod => ({ default: mod.Assistant })))
 
 const Router: React.FC = () => {
     return (
@@ -15,7 +15,7 @@ const Router: React.FC = () => {
                 <Route path="/" element={<Navigate to="/dashboard" />} />
                 <Route path="/dashboard" element={<Suspense fallback={<Loading />}><Dashboard /></Suspense>} />
                 <Route path="/employees" element={<Suspense fallback={<Loading />}><Employees /></Suspense>} />
-                <Route path="/chat" element={<Suspense fallback={<Loading />}><Chatbot /></Suspense>} />
+                <Route path="/assistant" element={<Suspense fallback={<Loading />}><Assistant /></Suspense>} />
             </Route>
             <Route path="*" element={<ErrorPage />} />
         </Routes>

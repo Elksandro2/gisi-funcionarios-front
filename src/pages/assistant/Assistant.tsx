@@ -4,9 +4,9 @@ import {
     BarChart, Bar, XAxis, YAxis, Tooltip as RechartsTooltip, Legend,
     PieChart, Pie, Cell, ResponsiveContainer
 } from 'recharts'
-import ChatService from '../../services/ChatService'
+import AssistantService from '../../services/AssistantService'
 import { AlertBox } from '../../components/alert-box/AlertBox'
-import './Chatbot.css'
+import './Assistant.css'
 
 interface Message {
     id: string
@@ -15,7 +15,7 @@ interface Message {
     timestamp: Date
 }
 
-export const Chatbot: React.FC = () => {
+export const Assistant: React.FC = () => {
     const [messages, setMessages] = useState<Message[]>([])
     const [input, setInput] = useState('')
     const [isLoading, setIsLoading] = useState(false)
@@ -26,7 +26,7 @@ export const Chatbot: React.FC = () => {
         type: 'success' | 'danger' | 'warning'
     } | null>(null)
 
-    const chatService = useMemo(() => new ChatService(), [])
+    const assistantService = useMemo(() => new AssistantService(), [])
     const messagesEndRef = useRef<HTMLDivElement>(null)
 
     // Cleanup when component unmounts
@@ -198,7 +198,7 @@ export const Chatbot: React.FC = () => {
         setIsLoading(true)
 
         try {
-            const data = await chatService.askAssistant({ message: textToSend })
+            const data = await assistantService.askAssistant({ message: textToSend })
             
             const assistantMessage: Message = {
                 id: (Date.now() + 1).toString(),
@@ -208,10 +208,10 @@ export const Chatbot: React.FC = () => {
             }
             setMessages((prev) => [...prev, assistantMessage])
         } catch (error: any) {
-            console.error('Erro no chatbot:', error)
+            console.error('Erro no assistente:', error)
             const errorMessage = error.response?.data?.message || 
                                  error.message || 
-                                 'Erro ao se comunicar com o servidor do Chatbot.'
+                                 'Erro ao se comunicar com o servidor do Assistente.'
             setAlert({
                 message: `Falha na resposta: ${errorMessage}`,
                 type: 'danger'
@@ -235,7 +235,7 @@ export const Chatbot: React.FC = () => {
     }
 
     return (
-        <div className="chatbot-container container-fluid mt-4 animate-fade-in pb-4">
+        <div className="assistant-container container-fluid mt-4 animate-fade-in pb-4">
             {alert && (
                 <AlertBox
                     message={alert.message}
@@ -244,8 +244,8 @@ export const Chatbot: React.FC = () => {
                 />
             )}
 
-            <div className="chatbot-card shadow-sm border-0">
-                {/* Cabeçalho do Chatbot */}
+            <div className="assistant-card shadow-sm border-0">
+                {/* Cabeçalho do Assistente */}
                 <div className="chat-header d-flex align-items-center justify-content-between">
                     <div className="d-flex align-items-center gap-3">
                         <div className="assistant-avatar-container">
