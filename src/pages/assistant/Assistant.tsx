@@ -209,7 +209,8 @@ export const Assistant: React.FC = () => {
             setMessages((prev) => [...prev, assistantMessage])
         } catch (error: any) {
             console.error('Erro no assistente:', error)
-            const errorMessage = error.response?.data?.message || 
+            const errorMessage = error.response?.data?.response || 
+                                 error.response?.data?.message || 
                                  error.message || 
                                  'Erro ao se comunicar com o servidor do Assistente.'
             setAlert({
