@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef, useMemo } from 'react'
 import {
     Send,
     Bot,
-    Sparkles,
     Trash2,
     ArrowRight,
     Mic,
