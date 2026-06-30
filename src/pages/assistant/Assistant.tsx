@@ -1,8 +1,24 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react'
-import { Send, Bot, Sparkles, Trash2, ArrowRight, Mic, MicOff } from 'lucide-react'
 import {
-    BarChart, Bar, XAxis, YAxis, Tooltip as RechartsTooltip, Legend,
-    PieChart, Pie, Cell, ResponsiveContainer
+    Send,
+    Bot,
+    Sparkles,
+    Trash2,
+    ArrowRight,
+    Mic,
+    MicOff,
+} from 'lucide-react'
+import {
+    BarChart,
+    Bar,
+    XAxis,
+    YAxis,
+    Tooltip as RechartsTooltip,
+    Legend,
+    PieChart,
+    Pie,
+    Cell,
+    ResponsiveContainer,
 } from 'recharts'
 import AssistantService from '../../services/AssistantService'
 import { AlertBox } from '../../components/alert-box/AlertBox'
@@ -34,20 +50,23 @@ export const Assistant: React.FC = () => {
         return () => {
             if (recognitionRef.current) {
                 try {
-                    recognitionRef.current.abort();
+                    recognitionRef.current.abort()
                 } catch (e) {
                     // Ignore abort errors
                 }
             }
-        };
-    }, []);
+        }
+    }, [])
 
     const toggleListening = () => {
-        const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition
+        const SpeechRecognition =
+            (window as any).SpeechRecognition ||
+            (window as any).webkitSpeechRecognition
         if (!SpeechRecognition) {
             setAlert({
-                message: 'Reconhecimento de voz não suportado pelo seu navegador.',
-                type: 'warning'
+                message:
+                    'Reconhecimento de voz não suportado pelo seu navegador.',
+                type: 'warning',
             })
             return
         }
@@ -70,20 +89,23 @@ export const Assistant: React.FC = () => {
 
                 recognition.onresult = (event: any) => {
                     const transcript = event.results[0][0].transcript
-                    setInput((prev) => prev ? `${prev} ${transcript}` : transcript)
+                    setInput((prev) =>
+                        prev ? `${prev} ${transcript}` : transcript
+                    )
                 }
 
                 recognition.onerror = (event: any) => {
                     console.warn('Speech recognition event:', event.error)
                     setIsListening(false)
-                    
+
                     // Ignora erros comuns que não afetam a aplicação criticamente (ex: usuário demorou a falar)
                     if (event.error !== 'no-speech') {
-                         const errorMsg = event.error === 'network' 
-                            ? 'Erro de rede ou permissão com o serviço de voz. Verifique sua conexão e se o site está usando HTTPS.'
-                            : `Erro no reconhecimento: ${event.error}`
-                         
-                         setAlert({ message: errorMsg, type: 'warning' })
+                        const errorMsg =
+                            event.error === 'network'
+                                ? 'Erro de rede ou permissão com o serviço de voz. Verifique sua conexão e se o site está usando HTTPS.'
+                                : `Erro no reconhecimento: ${event.error}`
+
+                        setAlert({ message: errorMsg, type: 'warning' })
                     }
                 }
 
@@ -102,7 +124,8 @@ export const Assistant: React.FC = () => {
 
     // Renderizador de mensagens que intercepta tags de gráfico <chart>
     const renderMessageContent = (text: string) => {
-        const chartRegex = /<chart\s+type="(\w+)"\s+title="([^"]+)"[^>]*>([\s\S]*?)<\/chart>/i
+        const chartRegex =
+            /<chart\s+type="(\w+)"\s+title="([^"]+)"[^>]*>([\s\S]*?)<\/chart>/i
         const match = text.match(chartRegex)
 
         if (!match) {
@@ -123,13 +146,32 @@ export const Assistant: React.FC = () => {
             return <div className="msg-text">{text}</div>
         }
 
-        const COLORS = ['#0d6efd', '#6610f2', '#6f42c1', '#d63384', '#fd7e14', '#ffc107']
+        const COLORS = [
+            '#0d6efd',
+            '#6610f2',
+            '#6f42c1',
+            '#d63384',
+            '#fd7e14',
+            '#ffc107',
+        ]
 
         return (
             <div className="msg-text">
                 {beforeText && <p className="mb-2">{beforeText}</p>}
-                <div className="chat-chart-card bg-white p-3 rounded shadow-sm my-2 border text-center mx-auto" style={{ minWidth: '280px', maxWidth: '100%', height: '240px' }}>
-                    <h6 className="fw-bold mb-2 text-dark text-start" style={{ fontSize: '0.85rem' }}>{title}</h6>
+                <div
+                    className="chat-chart-card bg-white p-3 rounded shadow-sm my-2 border text-center mx-auto"
+                    style={{
+                        minWidth: '280px',
+                        maxWidth: '100%',
+                        height: '240px',
+                    }}
+                >
+                    <h6
+                        className="fw-bold mb-2 text-dark text-start"
+                        style={{ fontSize: '0.85rem' }}
+                    >
+                        {title}
+                    </h6>
                     <div style={{ width: '100%', height: '175px' }}>
                         <ResponsiveContainer width="100%" height="100%">
                             {type === 'pie' ? (
@@ -143,19 +185,54 @@ export const Assistant: React.FC = () => {
                                         dataKey="value"
                                         nameKey="name"
                                     >
-                                        {data.map((_entry: any, index: number) => (
-                                            <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                                        ))}
+                                        {data.map(
+                                            (_entry: any, index: number) => (
+                                                <Cell
+                                                    key={`cell-${index}`}
+                                                    fill={
+                                                        COLORS[
+                                                            index %
+                                                                COLORS.length
+                                                        ]
+                                                    }
+                                                />
+                                            )
+                                        )}
                                     </Pie>
-                                    <RechartsTooltip formatter={(val) => [val, 'Quantidade']} />
-                                    <Legend wrapperStyle={{ fontSize: '9px', bottom: -5 }} />
+                                    <RechartsTooltip
+                                        formatter={(val) => [val, 'Quantidade']}
+                                    />
+                                    <Legend
+                                        wrapperStyle={{
+                                            fontSize: '9px',
+                                            bottom: -5,
+                                        }}
+                                    />
                                 </PieChart>
                             ) : (
-                                <BarChart data={data} margin={{ top: 5, right: 10, left: -25, bottom: 5 }}>
-                                    <XAxis dataKey="name" style={{ fontSize: '9px' }} />
-                                    <YAxis style={{ fontSize: '9px' }} allowDecimals={false} />
+                                <BarChart
+                                    data={data}
+                                    margin={{
+                                        top: 5,
+                                        right: 10,
+                                        left: -25,
+                                        bottom: 5,
+                                    }}
+                                >
+                                    <XAxis
+                                        dataKey="name"
+                                        style={{ fontSize: '9px' }}
+                                    />
+                                    <YAxis
+                                        style={{ fontSize: '9px' }}
+                                        allowDecimals={false}
+                                    />
                                     <RechartsTooltip />
-                                    <Bar dataKey="value" fill="#0d6efd" radius={[4, 4, 0, 0]} />
+                                    <Bar
+                                        dataKey="value"
+                                        fill="#0d6efd"
+                                        radius={[4, 4, 0, 0]}
+                                    />
                                 </BarChart>
                             )}
                         </ResponsiveContainer>
@@ -171,7 +248,6 @@ export const Assistant: React.FC = () => {
         'Qual a média salarial dos funcionários?',
         'Quem tem o maior salário e qual o departamento?',
         'Liste os funcionários do departamento de Tecnologia.',
-        'Qual a distribuição de funcionários por gênero?',
     ]
 
     // Auto-scroll para a última mensagem
@@ -198,8 +274,10 @@ export const Assistant: React.FC = () => {
         setIsLoading(true)
 
         try {
-            const data = await assistantService.askAssistant({ message: textToSend })
-            
+            const data = await assistantService.askAssistant({
+                message: textToSend,
+            })
+
             const assistantMessage: Message = {
                 id: (Date.now() + 1).toString(),
                 sender: 'assistant',
@@ -209,13 +287,14 @@ export const Assistant: React.FC = () => {
             setMessages((prev) => [...prev, assistantMessage])
         } catch (error: any) {
             console.error('Erro no assistente:', error)
-            const errorMessage = error.response?.data?.response || 
-                                 error.response?.data?.message || 
-                                 error.message || 
-                                 'Erro ao se comunicar com o servidor do Assistente.'
+            const errorMessage =
+                error.response?.data?.response ||
+                error.response?.data?.message ||
+                error.message ||
+                'Erro ao se comunicar com o servidor do Assistente.'
             setAlert({
                 message: `Falha na resposta: ${errorMessage}`,
-                type: 'danger'
+                type: 'danger',
             })
         } finally {
             setIsLoading(false)
@@ -231,7 +310,7 @@ export const Assistant: React.FC = () => {
         setMessages([])
         setAlert({
             message: 'Histórico de mensagens limpo com sucesso!',
-            type: 'success'
+            type: 'success',
         })
     }
 
@@ -250,20 +329,24 @@ export const Assistant: React.FC = () => {
                 <div className="chat-header d-flex align-items-center justify-content-between">
                     <div className="d-flex align-items-center gap-3">
                         <div className="assistant-avatar-container">
-                            <Bot className="assistant-avatar-icon text-white" size={24} />
+                            <Bot
+                                className="assistant-avatar-icon text-white"
+                                size={24}
+                            />
                             <span className="status-dot"></span>
                         </div>
                         <div>
                             <h5 className="chat-title text-white mb-0 d-flex align-items-center gap-2">
                                 Assistente Virtual GISI
-                                <Sparkles size={16} className="text-warning animate-pulse" />
                             </h5>
-                            <span className="chat-subtitle">Online • Especialista em Funcionários</span>
+                            <span className="chat-subtitle">
+                                Online • Especialista em Funcionários
+                            </span>
                         </div>
                     </div>
                     {messages.length > 0 && (
-                        <button 
-                            className="btn btn-outline-light border-0 rounded-circle btn-clear-chat" 
+                        <button
+                            className="btn btn-outline-light border-0 rounded-circle btn-clear-chat"
                             onClick={clearChat}
                             title="Limpar Conversa"
                         >
@@ -279,10 +362,15 @@ export const Assistant: React.FC = () => {
                             <div className="welcome-icon-container mx-auto mb-3">
                                 <Bot size={48} className="text-primary" />
                             </div>
-                            <h4 className="fw-bold text-dark mb-2">Olá! Eu sou o Assistente GISI.</h4>
+                            <h4 className="fw-bold text-dark mb-2">
+                                Olá! Eu sou o Assistente GISI.
+                            </h4>
                             <p className="text-muted mx-auto welcome-text">
-                                Eu posso responder dúvidas sobre os funcionários cadastrados, calcular salários médios, 
-                                listar departamentos, analisar datas de admissão e mais. Escolha uma sugestão ou digite sua pergunta!
+                                Eu posso responder dúvidas sobre os funcionários
+                                cadastrados, calcular salários médios, listar
+                                departamentos, analisar datas de admissão e
+                                mais. Escolha uma sugestão ou digite sua
+                                pergunta!
                             </p>
 
                             <div className="suggestions-grid mt-4">
@@ -292,8 +380,13 @@ export const Assistant: React.FC = () => {
                                         className="suggestion-chip d-flex align-items-center justify-content-between text-start"
                                         onClick={() => handleSend(suggestion)}
                                     >
-                                        <span className="suggestion-text">{suggestion}</span>
-                                        <ArrowRight size={14} className="suggestion-arrow" />
+                                        <span className="suggestion-text">
+                                            {suggestion}
+                                        </span>
+                                        <ArrowRight
+                                            size={14}
+                                            className="suggestion-arrow"
+                                        />
                                     </button>
                                 ))}
                             </div>
@@ -301,7 +394,10 @@ export const Assistant: React.FC = () => {
                     ) : (
                         <div className="messages-list">
                             {messages.map((msg) => (
-                                <div key={msg.id} className={`message-row ${msg.sender}`}>
+                                <div
+                                    key={msg.id}
+                                    className={`message-row ${msg.sender}`}
+                                >
                                     {msg.sender === 'assistant' && (
                                         <div className="msg-avatar">
                                             <Bot size={16} />
@@ -310,7 +406,13 @@ export const Assistant: React.FC = () => {
                                     <div className="message-bubble shadow-sm">
                                         {renderMessageContent(msg.text)}
                                         <div className="msg-time">
-                                            {msg.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                            {msg.timestamp.toLocaleTimeString(
+                                                [],
+                                                {
+                                                    hour: '2-digit',
+                                                    minute: '2-digit',
+                                                }
+                                            )}
                                         </div>
                                     </div>
                                 </div>
@@ -352,15 +454,22 @@ export const Assistant: React.FC = () => {
                 )}
 
                 {/* Rodapé e Input */}
-                <form onSubmit={handleSubmit} className="chat-footer p-3 bg-white border-top">
+                <form
+                    onSubmit={handleSubmit}
+                    className="chat-footer p-3 bg-white border-top"
+                >
                     <div className="input-group chat-input-group shadow-sm">
                         <button
                             type="button"
                             className={`btn chat-mic-btn px-3 d-flex align-items-center justify-content-center ${isListening ? 'listening' : ''}`}
                             onClick={toggleListening}
-                            title={isListening ? "Parar de ouvir" : "Falar"}
+                            title={isListening ? 'Parar de ouvir' : 'Falar'}
                         >
-                            {isListening ? <Mic size={18} /> : <MicOff size={18} />}
+                            {isListening ? (
+                                <Mic size={18} />
+                            ) : (
+                                <MicOff size={18} />
+                            )}
                         </button>
                         <input
                             type="text"
@@ -370,9 +479,9 @@ export const Assistant: React.FC = () => {
                             placeholder="Pergunte-me algo sobre os funcionários..."
                             className="form-control px-2 py-3 chat-input shadow-none"
                         />
-                        <button 
-                            type="submit" 
-                            disabled={isLoading || !input.trim()} 
+                        <button
+                            type="submit"
+                            disabled={isLoading || !input.trim()}
                             className="btn btn-primary px-4 d-flex align-items-center justify-content-center chat-send-btn"
                         >
                             <Send size={18} />
